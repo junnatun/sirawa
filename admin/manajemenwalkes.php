@@ -6,7 +6,10 @@ error_reporting(0);
 
 session_start();
 
-
+if(isset($_POST['delData'])) {
+    $id_user = $_POST['id_user'];
+    mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+}
 
 ?>
 
@@ -80,7 +83,7 @@ session_start();
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">
-                            <a href="#" class='sidebar-link'>
+                            <a href="../logout.php" class='sidebar-link'>
                                 <i class="bi bi-power"></i>
                                 <span>Log Out</span>
                             </a>
@@ -144,17 +147,16 @@ session_start();
                                             $nama =$data['nama'];
                                             $kelas = $data['kelas'];
                                     ?> <tr>
-                                        <form method="POST">
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
-                                        <td>
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
+                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button name="delData" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                        </td>
                                         </form>
                                     </tr>
                                     <?php } ?>

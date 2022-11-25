@@ -1,3 +1,54 @@
+<?php
+
+include '../config.php';
+include '../functions/functions.php';
+
+error_reporting(0);
+
+session_start();
+
+//GET ID USER
+$id_user = getIdUser($conn);
+
+//GET ID SISWA
+$id_siswa = getIdSiswa($conn);
+
+if (isset($_POST['addData'])){
+    $id_user = $_POST['id_user'];
+    $id_siswa = $_POST['id_siswa'];
+    $nama = $_POST['nama'];
+    $nisn = $_POST['nisn'];
+    $tempat_lahir = $_POST['tempat_lahir'];
+    $tgl_lahir = $_POST['tgl_lahir'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $agama = $_POST['agama'];
+    $kelas = $_POST['kelas'];
+    $id_kelas =mysqli_query($conn, 'SELECT id_kelas FROM tb_kelas WHERE kelas=$kelas');
+    $alamat = $_POST['alamat'];
+    $no_telp = $_POST['no_telp'];
+
+    $nama_ayah = $_POST['nama_ayah'];
+    $profesi_ayah = $_POST['profesi_ayah'];
+    $alamat_ayah = $_POST['alamat_ayah'];
+    $no_telp_ayah = $_POST['no_telp_ayah'];
+
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$nama','$tgl_lahir','siswa')");
+    $addSiswa = mysqli_query($conn, "INSERT INTO tb_siswa VALUES ('$id_siswa', '$id_user', '$id_kelas','$nama', '$nisn', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
+    $addOrtu = mysqli_query($conn, "INSERT INTO tb_ortu VALUES ('$id_siswa','$nama_ayah', '$profesi_ayah', '$alamat_ayah', '$no_telp_ayah','$nama_ibu', '$profesi_ibu', '$alamat_ibu', '$no_telp_ibu' ) ");
+
+    if($addUser && $addSiswa && $addOrtu){
+        echo "<script>alert('Berhasil menambah data!')</script>";
+        header('Location:manajemensiswa.php');
+    }else {
+        echo "<script>alert('Data gagal ditambahkan!')</script>";
+        header('Location: inputsiswa.php');
+    }
+}
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -65,7 +116,7 @@
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">
-                            <a href="#" class='sidebar-link'>
+                            <a href="../logout.php" class='sidebar-link'>
                                 <i class="bi bi-power"></i>
                                 <span>Log Out</span>
                             </a>
@@ -114,13 +165,13 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">ID User</label>
-                                                        <input name="id_user" type="text" id="first-name-column" class="form-control" placeholder="Contoh : US001" >
+                                                        <input name="id_user" value="<?=$id_user?>" type="text" id="first-name-column" class="form-control" placeholder="Contoh : US001" >
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="last-name-column">ID Siswa</label>
-                                                        <input name="id_guru" type="text" id="last-name-column" class="form-control" placeholder="Contoh : SW001" >
+                                                        <input name="id_siswa" value="<?=$id_siswa?>"  type="text" id="last-name-column" class="form-control" placeholder="Contoh : SW001" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,7 +201,7 @@
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Tanggal Lahir</label>
-                                                        <input name="tgl_lahir" type="text" id="first-name-column" class="form-control" placeholder="DD/MM/YYYY" >
+                                                        <input name="tgl_lahir" type="text" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -173,7 +224,7 @@
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Kelas</label>
-                                                        <input name="Kelas" type="text" id="first-name-column" class="form-control" placeholder="Contoh : 9A" >
+                                                        <input name="kelas" type="text" id="first-name-column" class="form-control" placeholder="Contoh : 9A" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -250,7 +301,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button type="submit" class="btn btn-primary me-1 mb-1">Simpan Perubahan</button>
+                                                <button name="addData" type="submit" class="btn btn-primary me-1 mb-1">Simpan Perubahan</button>
                                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Batal</button>
                                             </div>
                                         </form>

@@ -103,7 +103,7 @@ if (isset($_POST['addData'])){
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">
-                            <a href="#" class='sidebar-link'>
+                            <a href="../logout.php" class='sidebar-link'>
                                 <i class="bi bi-power"></i>
                                 <span>Log Out</span>
                             </a>

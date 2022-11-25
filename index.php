@@ -20,11 +20,11 @@ if (isset($_POST['login'])){
         if ($_SESSION['role'] == "admin"){
             header("Location: admin/index.php");
         }else if ($_SESSION['role'] == "guru"){
-            header("Location: guru/index.html");
+            header("Location: guru/index.php");
         }else if ($_SESSION['role'] == "wali kelas"){
-            header("Location: walkes/index.html");
+            header("Location: walkes/index.php");
         } else if ($_SESSION['role'] == "siswa"){
-            header("Location: siswa/index.html");
+            header("Location: siswa/index.php");
         }
     } else {
         echo "<script>alert('Username atau password Anda salah. Silahkan coba lagi!')</script>";

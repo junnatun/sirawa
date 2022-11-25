@@ -17,14 +17,14 @@ if (isset($_POST['addData'])){
     $id_kelas = mysqli_query($conn, 'SELECT id_kelas FROM tb_kelas WHERE kelas= "$kelas"');
     
     $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$kelas','wali kelas')");
-    $addGuru = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', 'id_kelas', 'id_guru')");
+    $addWali = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', 'id_kelas', 'id_guru')");
 
-    if($addUser && $addGuru){
+    if($addUser && $addWali){
         echo "<script>alert('Berhasil menambah data!')</script>";
-        header('Location:manajemenguru.php');
+        header('Location:manajemenwalkes.php');
     }else {
         echo "<script>alert('Data gagal ditambahkan!')</script>";
-        header('Location: inputguru.php');
+        header('Location: inputwalkes.php');
     }
 }
 
@@ -97,7 +97,7 @@ if (isset($_POST['addData'])){
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">
-                            <a href="#" class='sidebar-link'>
+                            <a href="../logout.php" class='sidebar-link'>
                                 <i class="bi bi-power"></i>
                                 <span>Log Out</span>
                             </a>

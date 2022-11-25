@@ -1,10 +1,27 @@
+<?php
+
+include '../config.php';
+
+error_reporting(0);
+
+session_start();
+
+$id_user = $_SESSION['id_user'];
+$data = mysqli_query($conn, "SELECT id_siswa, nama, nisn, kelas FROM tb_siswa s JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
+$row = mysqli_fetch_assoc($data);
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Data Siswa</title>
+    <title>Lihat Rapor</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
@@ -24,7 +41,7 @@
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.html"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -43,33 +60,21 @@
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item">
-                            <a href="index.html" class='sidebar-link'>
+                            <a href="index.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         <li class="sidebar-item active">
-                            <a href="manajemensiswa-walkes.html" class='sidebar-link'>
-                                <i class="bi bi-people-fill"></i>
-                                <span>Manajemen Siswa</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="manajemennilai-walkes.html" class='sidebar-link'>
-                                <i class="bi bi-table"></i>
-                                <span>Manajemen Nilai Siswa</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="lihatrapor-walkes.html" class='sidebar-link'>
+                            <a href="lihatrapor.php" class='sidebar-link'>
                                 <i class="bi bi-award-fill"></i>
-                                <span>Lihat Rapor Siswa</span>
+                                <span>Lihat Rapor</span>
                             </a>
                         </li>
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">
-                            <a href="#" class='sidebar-link'>
+                            <a href="../logout.php" class='sidebar-link'>
                                 <i class="bi bi-power"></i>
                                 <span>Log Out</span>
                             </a>
@@ -81,36 +86,41 @@
             </div>
         </div>
         <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
             <div class="page-heading">
 
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>Manajemen Data Siswa</h3>
+                            <h3>Lihat Rapor</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Manajemen Siswa</li>
+                                    <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Lihat Rapor</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6 col-lg-4 col-md-6">
+                    <div class="col-6 col-lg-8 col-md-6">
                         <div class="card">
                             <div class="card-body px-4 py-4-5">
                                 <div class="row">
-                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                        <div class="stats-icon blue mb-2">
-                                            <i class="iconly-boldStar"></i>
-                                        </div>
+                                    <div class="col-md-3 col-12">
+                                        <h5><?=$row['id_siswa'];?></h5>
                                     </div>
-                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Kelas Wali</h6>
-                                        <h6 class="font-extrabold mb-0">9A</h6>
+                                    <div class="col-md-6 col-12">
+                                        <h5><?=$row['nama'];?></h5>
+                                        <h5><?=$row['nisn'];?></h5>
+                                        <h5><?=$row['kelas'];?></h5>
                                     </div>
                                 </div>
                             </div>
@@ -121,24 +131,7 @@
                             <div class="card-body px-4 py-4-5">
                                 <div class="row">
                                     <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                        <div class="stats-icon blue mb-2">
-                                            <i class="iconly-boldUser1"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Jumlah Siswa Wali</h6>
-                                        <h6 class="font-extrabold mb-0">30</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-4 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                        <div class="stats-icon green mb-2">
+                                        <div class="stats-icon purple mb-2">
                                             <i class="iconly-boldCalendar"></i>
                                         </div>
                                     </div>
@@ -151,48 +144,73 @@
                         </div>
                     </div>
                 </div>
-                <!--content-->
+
                 <section class="section">
                     <div class="card">
 
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-md-9 h4">Data Siswa</div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-lg">
+                                    <thead>
+                                        <tr>
+                                            <th>Nilai Sikap</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Mata Pelajaran</th>
+                                            <th>Nilai</th>
+                                            <th>Predikat</th>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Matematika</td>
+                                            <td>90</td>
+                                            <td>A</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Ilmu Pengetahuan Alam</td>
+                                            <td>90</td>
+                                            <td>A</td>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="alert alert-primary">
+                                <div class="table-responsive">
+                                    <table class="table table-white table-lg">
+                                        <thead>
+                                            <tr>
+                                                <th>Total Nilai</th>
+                                                <th></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Nilai Rata-Rata</th>
+                                                <th></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Peringkat</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="card-body">
-                            <table class="table table-striped" id="table1">
-                                <thead>
-                                    <tr>
-                                        <th>ID Siswa</th>
-                                        <th>Nama</th>
-                                        <th>NISN</th>
-                                        <th>Kelas</th>
-                                    </tr>
-                                </thead>
-                                <!--data-->
-                                <tbody>
-                                    <tr>
-                                        <td>SW001</td>
-                                        <td>Amirudin</td>
-                                        <td>0021225198</td>
-                                        <td>9A</td>
-                                        <td>
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <!--/data-->
-                            </table>
-                        </div>
                     </div>
+
                 </section>
-                <!--/content-->
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         <p>Made with ❤ by Junnatun</p>
                     </div>
@@ -202,9 +220,6 @@
     </div>
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
-
-    <script src="../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
-    <script src="../assets/js/pages/simple-datatables.js"></script>
 
 </body>
 

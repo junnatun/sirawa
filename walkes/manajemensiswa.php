@@ -1,10 +1,31 @@
+<?php
+
+include '../config.php';
+
+error_reporting(0);
+
+session_start();
+
+$id_user = $_SESSION['id_user'];
+$data = mysqli_query($conn, "SELECT * FROM tb_walikelas JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
+$row = mysqli_fetch_assoc($data);
+$id_kelas = $row['id_kelas'];
+
+$siswakelas = mysqli_query($conn, "SELECT COUNT(id_kelas) FROM tb_siswa WHERE id_kelas = '$id_kelas'");
+
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Nilai Siswa</title>
+    <title>Manajemen Data Siswa</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
@@ -49,9 +70,21 @@
                             </a>
                         </li>
                         <li class="sidebar-item active">
-                            <a href="manajemennilai-guru.html" class='sidebar-link'>
+                            <a href="manajemensiswa-walkes.html" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>Manajemen Siswa</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemennilai-walkes.html" class='sidebar-link'>
                                 <i class="bi bi-table"></i>
                                 <span>Manajemen Nilai Siswa</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="lihatrapor-walkes.html" class='sidebar-link'>
+                                <i class="bi bi-award-fill"></i>
+                                <span>Lihat Rapor Siswa</span>
                             </a>
                         </li>
                     </ul>
@@ -69,40 +102,83 @@
             </div>
         </div>
         <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
-            </header>
-
             <div class="page-heading">
 
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>Manajemen Nilai Siswa</h3>
-                            <p class="text-subtitle text-muted">Input Nilai Siswa</p>
+                            <h3>Manajemen Data Siswa</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="manajemennilai-guru.html">Manajemen Nilai Siswa</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Input Nilai</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Manajemen Siswa</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-6 col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon blue mb-2">
+                                            <i class="iconly-boldStar"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Kelas Wali</h6>
+                                        <h6 class="font-extrabold mb-0"><?=$row['kelas'];?></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon blue mb-2">
+                                            <i class="iconly-boldUser1"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Jumlah Siswa Wali</h6>
+                                        <h6 class="font-extrabold mb-0"></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon green mb-2">
+                                            <i class="iconly-boldCalendar"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Semester</h6>
+                                        <h6 class="font-extrabold mb-0">1</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--content-->
                 <section class="section">
                     <div class="card">
 
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-md-9 h4">Data Nilai Siswa</div>
-                                <div class="col-md-3 btn btn-primary rounded-pill">Simpan Perubahan</div>
-
+                                <div class="col-md-9 h4">Data Siswa</div>
                             </div>
                         </div>
 
@@ -112,60 +188,55 @@
                                     <tr>
                                         <th>ID Siswa</th>
                                         <th>Nama</th>
+                                        <th>NISN</th>
                                         <th>Kelas</th>
-                                        <th>PH1</th>
-                                        <th>PH2</th>
-                                        <th>PH3</th>
-                                        <th>PH4</th>
-                                        <th>PTS</th>
-                                        <th>PAS</th>
                                     </tr>
                                 </thead>
-
                                 <!--data-->
                                 <tbody>
-                                    <tr>
-                                        <td>SW001</td>
-                                        <td>Amirudin</td>
-                                        <td>9A</td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph1"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph2"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph3"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph4"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="pts"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="pas"></td>
-                                        <td>
-                                            <a href="#" class="btn icon btn-success rounded-pill">
-                                                <i class="bi bi-check"></i>
+                                <?php
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas = '$id_kelas'");
+                                        while($data=mysqli_fetch_array($pullData)){
+                                            $id_siswa =$data['id_siswa'];
+                                            $nama =$data['nama'];
+                                            $nisn =$data['nisn'];
+                                            $kelas = $data['kelas'];
+                                    ?> <tr>
+                                        <td><?=$id_siswa?></td>
+                                        <td><?=$nama?></td>
+                                        <td><?=$nisn?></td>
+                                        <td><?=$kelas?></td>
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
+                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                                <i class="bi bi-pencil"></i>
                                             </a>
+                                        </form>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td><?=$id_siswa?></td>
+                                        <td><?=$nama?></td>
+                                        <td><?=$nisn?></td>
+                                        <td><?=$kelas?></td>
+                                        <form method="POST" >
+                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </form>
+                                            
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>SW001</td>
-                                        <td>Amirudin</td>
-                                        <td>9A</td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph1"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph2"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph3"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="ph4"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="pts"></td>
-                                        <td><input type="text" id="last-name-column" class="form-control" placeholder="-" name="pas"></td>
-                                        <td>
-                                            <a href="#" class="btn icon btn-success rounded-pill">
-                                                <i class="bi bi-check"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    <?php } ?>
                                     <!--/data-->
-
                             </table>
                         </div>
                     </div>
-
                 </section>
+                <!--/content-->
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         <p>Made with ❤ by Junnatun</p>
                     </div>
