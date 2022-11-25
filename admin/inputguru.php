@@ -18,9 +18,8 @@ if (isset($_POST['addData'])){
     $alamat = $_POST['alamat'];
     $no_telp = $_POST['no_telp'];
 
-    $addUser = mysqli_query($conn, "INSERT INTO tb_user (id_user, username, password, role) VALUES ('$id_user','$nama','$tgl_lahir','guru')");
-    $addGuru = mysqli_query($conn, "INSERT INTO tb_guru (id_guru, id_user, nama, nip, jenis_kelamin, tempat_lahir, tgl_lahir, agama, alamat, no_telp)
-    VALUES ('$id_guru', '$id_user', '$nama', '$nip', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$nama','$tgl_lahir','guru')");
+    $addGuru = mysqli_query($conn, "INSERT INTO tb_guru VALUES ('$id_guru', '$id_user', '$nama', '$nip', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
 
     if($addUser && $addGuru){
         echo "<script>alert('Berhasil menambah data!')</script>";
@@ -218,7 +217,7 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button nama="addData" type="submit" class="btn btn-primary me-1 mb-1">Simpan Data</button>
+                                                <button name="addData" type="submit" class="btn btn-primary me-1 mb-1">Simpan Data</button>
                                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Batal</button>
                                             </div>
                                         </form>

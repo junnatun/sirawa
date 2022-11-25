@@ -200,13 +200,12 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                                     $id_user = $data['id_user'];
                                                     $username =$data['username'];
                                                     $role = $data['role'];
-                                                }
-                                            ?>
-                                            <tr>
+                                            ?> <tr>
                                                 <td><?=$id_user?></td>
                                                 <td><?=$username?></td>
                                                 <td><?=$role?></td>
                                             </tr>
+                                            <?php } ?>
                                             <!--/data-->
                                     </table>
                                 </div>

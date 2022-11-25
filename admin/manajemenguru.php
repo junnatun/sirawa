@@ -8,13 +8,8 @@ session_start();
 
 //DELETE DATA
 if(isset($_POST['delData'])) {
-	$id_guru = $_GET['id_guru'];
-	$delData = mysqli_query($conn, "DELETE FROM tb_guru WHERE id_guru='$id_guru'");
-	if($delData) {
-		echo "<script>alert('Data berhasil dihapus!')</script>";
-	} else {
-		echo "<script>alert('Gagal menghapus data!')</script>";
-	}
+	$id_guru = $_POST['id_guru'];
+	mysqli_query($conn, "DELETE FROM tb_guru WHERE id_guru='$id_guru'");
 }
 
 
@@ -155,21 +150,22 @@ if(isset($_POST['delData'])) {
                                             $id_guru = $data['id_guru'];
                                             $nama =$data['nama'];
                                             $nip = $data['nip'];
-                                        }
-                                    ?>
-                                    <tr>
+                                    ?> <tr>
+                                        <form method="POST">
                                         <td><?=$id_guru?></td>
                                         <td><?=$nama?></td>
                                         <td><?=$nip?></td>
                                         <td>
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
+                                            <button name="delData" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
+                                        </form>
                                     </tr>
+                                    <?php } ?>
                                     <!--/data-->
                             </table>
                         </div>
@@ -178,7 +174,7 @@ if(isset($_POST['delData'])) {
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         <p>Made with ❤ by Junnatun</p>
                     </div>
