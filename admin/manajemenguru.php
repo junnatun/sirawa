@@ -8,8 +8,8 @@ session_start();
 
 //DELETE DATA
 if(isset($_POST['delData'])) {
-	$id_guru = $_POST['id_guru'];
-	mysqli_query($conn, "DELETE FROM tb_guru WHERE id_guru='$id_guru'");
+    $id_user = $_POST['id_user'];
+    mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
 }
 
 
@@ -147,23 +147,26 @@ if(isset($_POST['delData'])) {
                                     <?php
                                         $pullData=mysqli_query($conn, "SELECT * FROM tb_guru");
                                         while($data=mysqli_fetch_array($pullData)){
+                                            $id_user = $data['id_user'];
                                             $id_guru = $data['id_guru'];
                                             $nama =$data['nama'];
                                             $nip = $data['nip'];
                                     ?> <tr>
-                                        <form method="POST">
+                                        
                                         <td><?=$id_guru?></td>
                                         <td><?=$nama?></td>
                                         <td><?=$nip?></td>
                                         <td>
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
+                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button name="delData" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                        </td>
                                         </form>
+                                        </td>
                                     </tr>
                                     <?php } ?>
                                     <!--/data-->

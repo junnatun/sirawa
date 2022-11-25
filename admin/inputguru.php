@@ -1,10 +1,14 @@
 <?php
 
 include '../config.php';
+include '../functions/functions.php';
 
 error_reporting(0);
 
 session_start();
+
+$id_user = getIdUser($conn);
+$id_guru = getIdGuru($conn);
 
 if (isset($_POST['addData'])){
     $id_user = $_POST['id_user'];
@@ -143,13 +147,13 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">ID User</label>
-                                                        <input name="id_user" type="text" id="first-name-column" class="form-control" placeholder="Contoh : US001">
+                                                        <input name="id_user" value="<?=$id_user?>" type="text" id="first-name-column" class="form-control" placeholder="Contoh : US001">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="last-name-column">ID Guru</label>
-                                                        <input name="id_guru" type="text" id="last-name-column" class="form-control" placeholder="Contoh : GR01" >
+                                                        <input name="id_guru" value="<?=$id_guru?>" type="text" id="last-name-column" class="form-control" placeholder="Contoh : GR01" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -179,7 +183,7 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Tanggal Lahir</label>
-                                                        <input name="tgl_lahir" type="text" id="first-name-column" class="form-control" placeholder="DD/MM/YYYY" >
+                                                        <input name="tgl_lahir" type="text" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" >
                                                     </div>
                                                 </div>
                                             </div>

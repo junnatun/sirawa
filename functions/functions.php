@@ -45,5 +45,41 @@ function getTotalSiswaL($conn){
     }
 }
 
+function getIdUser($conn){
+    $sql = mysqli_query($conn, "SELECT max(id_user) as maxrow FROM tb_user");
+    $data = mysqli_fetch_array($sql);
+    $id = $data['maxrow'];
+    $order = (int) substr($id, 3, 3);
+    $order++;
+    $code = 'US';
+    $id = $code.sprintf("%03s", $order);
+    return $id;
+    
+}
+
+function getIdGuru($conn){
+    $sql = mysqli_query($conn, "SELECT max(id_guru) as maxrow FROM tb_guru");
+    $data = mysqli_fetch_array($sql);
+    $id = $data['maxrow'];
+    $order = (int) substr($id, 3, 3);
+    $order++;
+    $code = 'GR';
+    $id = $code.sprintf("%02s", $order);
+    return $id;
+    
+}
+
+function getIdSiswa($conn){
+    $sql = mysqli_query($conn, "SELECT max(id_siswa) as maxrow FROM tb_siswa");
+    $data = mysqli_fetch_array($sql);
+    $id = $data['maxrow'];
+    $order = (int) substr($id, 3, 3);
+    $order++;
+    $code = 'SW';
+    $id = $code.sprintf("%03s", $order);
+    return $id;
+    
+}
+
 
 ?>

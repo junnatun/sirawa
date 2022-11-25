@@ -109,7 +109,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form">
+                                        <form class="form" method="POST">
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
@@ -211,13 +211,13 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Pekerjaan Ayah</label>
-                                                        <input name="prof_ayah" type="text" id="first-name-column" class="form-control" placeholder="Contoh : TNI" >
+                                                        <input name="profesi_ayah" type="text" id="first-name-column" class="form-control" placeholder="Contoh : TNI" >
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="last-name-column">Pekerjaan Ibu</label>
-                                                        <input name="prof_ibu"type="text" id="last-name-column" class="form-control" placeholder="Contoh : Dokter" >
+                                                        <input name="profesi_ibu"type="text" id="last-name-column" class="form-control" placeholder="Contoh : Dokter" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -225,13 +225,13 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Alamat Ayah</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Contoh : Jalan Pemuda No. 101 Yogyakarta" name="alamat"></textarea>
+                                                        <textarea name="alamat_ayah" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Contoh : Jalan Pemuda No. 101 Yogyakarta" ></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Alamat Ibu</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Contoh : Jalan Pemuda No. 101 Yogyakarta" name="alamat"></textarea>
+                                                        <textarea name="alamat_ibu" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Contoh : Jalan Pemuda No. 101 Yogyakarta"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -239,13 +239,13 @@
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Nomor Telepon Ayah</label>
-                                                        <input type="text" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" name="no-ayah">
+                                                        <input name="no_telp_ayah"type="text" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="last-name-column">Nomor Telepon Ibu</label>
-                                                        <input type="text" id="last-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" name="no-ibu">
+                                                        <input name="no_telp_ibu"type="text" id="last-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >
                                                     </div>
                                                 </div>
                                             </div>

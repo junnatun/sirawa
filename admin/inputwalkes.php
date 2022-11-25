@@ -1,12 +1,32 @@
 <?php
 
 include '../config.php';
+include '../functions/functions.php';
 
 error_reporting(0);
 
 session_start();
 
 
+if (isset($_POST['addData'])){
+    $id_user = getIdUser($conn);
+    $id_walikelas = $_POST['id_wali'];
+    $nama = $_POST['nama'];
+    $kelas = $_POST['kelas'];
+    $id_guru= mysqli_query($conn, 'SELECT id_guru FROM tb_guru WHERE nama= "$nama"');
+    $id_kelas = mysqli_query($conn, 'SELECT id_kelas FROM tb_kelas WHERE kelas= "$kelas"');
+    
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$kelas','wali kelas')");
+    $addGuru = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', 'id_kelas', 'id_guru')");
+
+    if($addUser && $addGuru){
+        echo "<script>alert('Berhasil menambah data!')</script>";
+        header('Location:manajemenguru.php');
+    }else {
+        echo "<script>alert('Data gagal ditambahkan!')</script>";
+        header('Location: inputguru.php');
+    }
+}
 
 ?>
 
@@ -121,12 +141,12 @@ session_start();
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form">
+                                        <form class="form" method="POST">
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
-                                                        <label for="last-name-column">ID Guru</label>
-                                                        <input name="id_guru" type="text" id="last-name-column" class="form-control" placeholder="Contoh : BIO001">
+                                                        <label for="last-name-column">ID Wali Kelas</label>
+                                                        <input name="id_wali" type="text" id="last-name-column" class="form-control" placeholder="Contoh : WK01">
                                                     </div>
                                                 </div>
                                             </div>
@@ -146,7 +166,7 @@ session_start();
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 d-flex justify-content-end">
-                                                    <button type="submit" class="btn btn-primary me-1 mb-1">Simpan Perubahan</button>
+                                                    <button name="addData" type="submit" class="btn btn-primary me-1 mb-1">Simpan Perubahan</button>
                                                     <button type="reset" class="btn btn-light-secondary me-1 mb-1">Batal</button>
                                                 </div>
                                         </form>
