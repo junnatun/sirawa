@@ -134,6 +134,7 @@ if(isset($_POST['delData'])) {
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
+                                        <th>ID wali</th>
                                         <th>Nama Guru</th>
                                         <th>Kelas Wali</th>
                                     </tr>
@@ -142,13 +143,17 @@ if(isset($_POST['delData'])) {
                                 <!--data-->
                                 <tbody>
                                 <?php
-                                        $pullData=mysqli_query($conn, "SELECT g.nama, k.kelas FROM tb_walikelas w JOIN tb_guru g USING(id_guru) JOIN tb_kelas k USING(id_kelas);");
+                                        $pullData=mysqli_query($conn, "SELECT w.id_wali, w.id_user, g.nama, k.kelas FROM tb_walikelas w JOIN tb_guru g USING(id_guru) JOIN tb_kelas k USING(id_kelas);");
                                         while($data=mysqli_fetch_array($pullData)){
+                                            $id_user=$data['id_user'];
+                                            $id_wali=$data['id_wali'];
                                             $nama =$data['nama'];
                                             $kelas = $data['kelas'];
                                     ?> <tr>
+                                        <td><?=$id_wali?></td>
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
+                                        <td>
                                         <form method="POST">
                                             <input type="hidden" name="id_user" value="<?=$id_user;?>">
                                             <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
@@ -158,6 +163,7 @@ if(isset($_POST['delData'])) {
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
+                                        </td>
                                     </tr>
                                     <?php } ?>
                                     

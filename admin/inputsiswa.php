@@ -14,16 +14,18 @@ $id_user = getIdUser($conn);
 $id_siswa = getIdSiswa($conn);
 
 if (isset($_POST['addData'])){
-    $id_user = $_POST['id_user'];
-    $id_siswa = $_POST['id_siswa'];
     $nama = $_POST['nama'];
     $nisn = $_POST['nisn'];
     $tempat_lahir = $_POST['tempat_lahir'];
     $tgl_lahir = $_POST['tgl_lahir'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $agama = $_POST['agama'];
+
     $kelas = $_POST['kelas'];
-    $id_kelas =mysqli_query($conn, 'SELECT id_kelas FROM tb_kelas WHERE kelas=$kelas');
+    $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
+    $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
+    $id_kelas = $data_id_kelas['id_kelas'];
+
     $alamat = $_POST['alamat'];
     $no_telp = $_POST['no_telp'];
 
@@ -32,16 +34,29 @@ if (isset($_POST['addData'])){
     $alamat_ayah = $_POST['alamat_ayah'];
     $no_telp_ayah = $_POST['no_telp_ayah'];
 
+    $nama_ibu = $_POST['nama_ibu'];
+    $profesi_ibu = $_POST['profesi_ibu'];
+    $alamat_ibu = $_POST['alamat_ibu'];
+    $no_telp_ibu = $_POST['no_telp_ibu'];
+    
     $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$nama','$tgl_lahir','siswa')");
-    $addSiswa = mysqli_query($conn, "INSERT INTO tb_siswa VALUES ('$id_siswa', '$id_user', '$id_kelas','$nama', '$nisn', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
-    $addOrtu = mysqli_query($conn, "INSERT INTO tb_ortu VALUES ('$id_siswa','$nama_ayah', '$profesi_ayah', '$alamat_ayah', '$no_telp_ayah','$nama_ibu', '$profesi_ibu', '$alamat_ibu', '$no_telp_ibu' ) ");
-
-    if($addUser && $addSiswa && $addOrtu){
-        echo "<script>alert('Berhasil menambah data!')</script>";
-        header('Location:manajemensiswa.php');
-    }else {
+    if($addUser){
+        $addSiswa = mysqli_query($conn, "INSERT INTO tb_siswa VALUES ('$id_siswa', '$id_user', '$id_kelas','$nama', '$nisn', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
+        if($addSiswa){
+            $addOrtu = mysqli_query($conn, "INSERT INTO tb_ortu VALUES ('$id_siswa','$nama_ayah', '$profesi_ayah', '$alamat_ayah', '$no_telp_ayah','$nama_ibu', '$profesi_ibu', '$alamat_ibu', '$no_telp_ibu' ) ");
+            if($addOrtu){
+                header('refresh:0; url=manajemensiswa.php');
+                echo "<script>alert('Berhasil menambah data!')</script>";
+            }else{
+                echo "<script>alert('Data gagal ditambahkan!')</script>";
+                mysqli_query($conn,"DELETE FROM tb_user, tb_siswa WHERE id_user = '$id_user'" );
+            }
+        }else {
+            echo "<script>alert('Data gagal ditambahkan!')</script>";
+            mysqli_query($conn,"DELETE FROM tb_user WHERE id_user = '$id_user'" );
+        }
+    }else{
         echo "<script>alert('Data gagal ditambahkan!')</script>";
-        header('Location: inputsiswa.php');
     }
 }
 
@@ -98,7 +113,7 @@ if (isset($_POST['addData'])){
                         <li class="sidebar-item">
                             <a href="manajemenguru.php" class='sidebar-link'>
                                 <i class="bi bi-person-badge-fill"></i>
-                                <span>Manajemen Siswa</span>
+                                <span>Manajemen Guru</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -162,21 +177,7 @@ if (isset($_POST['addData'])){
                                     <div class="card-body">
                                         <form class="form" method="POST">
                                             <div class="row">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="first-name-column">ID User</label>
-                                                        <input name="id_user" value="<?=$id_user?>" type="text" id="first-name-column" class="form-control" placeholder="Contoh : US001" >
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="last-name-column">ID Siswa</label>
-                                                        <input name="id_siswa" value="<?=$id_siswa?>"  type="text" id="last-name-column" class="form-control" placeholder="Contoh : SW001" >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-8">
+                                                <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="first-name-vertical">Nama Lengkap</label>
                                                         <input name="nama" type="text" id="first-name-vertical" class="form-control" name="nama" placeholder="Contoh : Junnatunnisa">
@@ -184,10 +185,10 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-8">
+                                                <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="first-name-vertical">NISN</label>
-                                                        <input name="nisn" type="text" id="first-name-vertical" class="form-control" name="nip" placeholder="Contoh : 1972XXXXXXXXXXXXXX">
+                                                        <input name="nisn" type="number" id="first-name-vertical" class="form-control" name="nip" placeholder="Contoh : 1972XXXXXXXXXXXXXX">
                                                     </div>
                                                 </div>
                                             </div>
@@ -201,7 +202,7 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Tanggal Lahir</label>
-                                                        <input name="tgl_lahir" type="text" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" >
+                                                        <input name="tgl_lahir" type="date" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -210,8 +211,8 @@ if (isset($_POST['addData'])){
                                                     <fieldset class="form-group">
                                                         <label for="first-name-column">Jenis Kelamin</label>
                                                         <select name="jenis_kelamin" class="form-select" id="basicSelect">
-                                                            <option>Perempuan</option>
-                                                            <option>Laki-Laki</option>
+                                                            <option value="P">Perempuan</option>
+                                                            <option value="L">Laki-Laki</option>
                                                         </select>
                                                     </fieldset>
                                                 </div>
@@ -229,7 +230,7 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-8 col-12">
+                                                <div class="col-md-12 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Alamat</label>
                                                         <textarea name="alamat" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Contoh : Jalan Pemuda No. 101 Yogyakarta" ></textarea>
@@ -237,10 +238,10 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-8 col-12">
+                                                <div class="col-md-12 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Nomor Telepon</label>
-                                                        <input  name="no_telp" type="text" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX">
+                                                        <input  name="no_telp" type="number" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX">
                                                     </div>
                                                 </div>
                                             </div>
@@ -290,13 +291,13 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Nomor Telepon Ayah</label>
-                                                        <input name="no_telp_ayah"type="text" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >
+                                                        <input name="no_telp_ayah"type="number" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="last-name-column">Nomor Telepon Ibu</label>
-                                                        <input name="no_telp_ibu"type="text" id="last-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >
+                                                        <input name="no_telp_ibu"type="number" id="last-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >
                                                     </div>
                                                 </div>
                                             </div>

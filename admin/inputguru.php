@@ -7,8 +7,8 @@ error_reporting(0);
 
 session_start();
 
-$id_user = getIdUser($conn);
-$id_guru = getIdGuru($conn);
+$id_user = getLastID($conn, 'tb_user', 'id_user', 'US');
+$id_guru = getLastID($conn, 'tb_guru', 'id_guru', 'GR');
 
 if (isset($_POST['addData'])){
     $id_user = $_POST['id_user'];
@@ -23,14 +23,17 @@ if (isset($_POST['addData'])){
     $no_telp = $_POST['no_telp'];
 
     $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$nama','$tgl_lahir','guru')");
-    $addGuru = mysqli_query($conn, "INSERT INTO tb_guru VALUES ('$id_guru', '$id_user', '$nama', '$nip', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
-
-    if($addUser && $addGuru){
-        echo "<script>alert('Berhasil menambah data!')</script>";
-        header('Location:manajemenguru.php');
+    if($addUser){
+        $addGuru = mysqli_query($conn, "INSERT INTO tb_guru VALUES ('$id_guru', '$id_user', '$nama', '$nip', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
+        if($addGuru){
+            header('refresh:0; url=manajemenguru.php');
+            echo "<script>alert('Berhasil menambah data!')</script>";
+        }else {
+            echo "<script>alert('Data gagal ditambahkan!')</script>";
+            mysqli_query($conn,"DELETE FROM tb_user WHERE id_user = '$id_user'" );
+        }
     }else {
         echo "<script>alert('Data gagal ditambahkan!')</script>";
-        header('Location: inputguru.php');
     }
 }
 
@@ -144,21 +147,7 @@ if (isset($_POST['addData'])){
                                     <div class="card-body">
                                         <form action="inputguru.php" method="POST" class="form">
                                             <div class="row">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="first-name-column">ID User</label>
-                                                        <input name="id_user" value="<?=$id_user?>" type="text" id="first-name-column" class="form-control" placeholder="Contoh : US001">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group">
-                                                        <label for="last-name-column">ID Guru</label>
-                                                        <input name="id_guru" value="<?=$id_guru?>" type="text" id="last-name-column" class="form-control" placeholder="Contoh : GR01" >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-8">
+                                                <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="first-name-vertical">Nama Lengkap</label>
                                                         <input name="nama" type="text" id="first-name-vertical" class="form-control" placeholder="Contoh : Junnatunnisa">
@@ -166,7 +155,7 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-8">
+                                                <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="first-name-vertical">NIP</label>
                                                         <input name="nip" type="text" id="first-name-vertical" class="form-control"  placeholder="Contoh : 1972XXXXXXXXXXXXXX">
@@ -183,21 +172,21 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Tanggal Lahir</label>
-                                                        <input name="tgl_lahir" type="text" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" >
+                                                        <input name="tgl_lahir" type="date" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" >
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-4 col-12">
+                                                <div class="col-md-6 col-12">
                                                     <fieldset class="form-group">
                                                         <label for="first-name-column">Jenis Kelamin</label>
                                                         <select name="jenis_kelamin" class="form-select" id="basicSelect">
-                                                            <option>Perempuan</option>
-                                                            <option>Laki-Laki</option>
+                                                            <option value="P">Perempuan</option>
+                                                            <option value="L">Laki-Laki</option>
                                                         </select>
                                                     </fieldset>
                                                 </div>
-                                                <div class="col-md-4 col-12">
+                                                <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Agama</label>
                                                         <input name="agama" type="text" id="first-name-column" class="form-control" placeholder="Contoh : Islam" >
@@ -205,7 +194,7 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-8 col-12">
+                                                <div class="col-md-12 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Alamat</label>
                                                         <textarea name="alamat" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Contoh : Jalan Pemuda No. 101 Yogyakarta" ></textarea>
@@ -213,7 +202,7 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-8 col-12">
+                                                <div class="col-md-12 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Nomor Telepon</label>
                                                         <input name="no_telp"type="text" id="first-name-column" class="form-control" placeholder="Contoh : 0822XXXXXXXX" >

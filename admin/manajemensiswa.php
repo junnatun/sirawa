@@ -25,6 +25,7 @@ if(isset($_POST['delData'])) {
     $id_user = $_POST['id_user'];
     mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -216,30 +217,78 @@ if(isset($_POST['delData'])) {
                         </div>
 
                         <div class="card-body">
+                        <div class="table-responsive text-nowrap">
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Siswa</th>
+                                        <th>Username</th>
                                         <th>Nama</th>
-                                        <th>NISN</th>
                                         <th>Kelas</th>
+                                        <th>NISN</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>Tempat Lahir</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Agama</th>
+                                        <th>Alamat</th>
+                                        <th>Telp</th>
+                                        <th>Nama Ayah</th>
+                                        <th>Pekerjaan Ayah</th>
+                                        <th>Alamat Ayah</th>
+                                        <th>Telp Ayah</th>
+                                        <th>Nama Ibu</th>
+                                        <th>Pekerjaan Ibu</th>
+                                        <th>Alamat Ibu</th>
+                                        <th>Telp Ibu</th>
                                     </tr>
                                 </thead>
 
                                 <!--data-->
                                 <tbody>
                                 <?php
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_ortu USING(id_siswa) JOIN tb_user USING(id_user)");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_siswa =$data['id_siswa'];
+                                            $username = $data['username'];
                                             $nama =$data['nama'];
-                                            $nisn =$data['nisn'];
                                             $kelas = $data['kelas'];
+                                            $nisn =$data['nisn'];
+                                            $jk =$data['jenis_kelamin'];
+                                            $tempat =$data['tempat_lahir'];
+                                            $tgl =$data['tgl_lahir'];
+                                            $agama = $data['agama'];
+                                            $no =$data['no_telp'];
+
+                                            $nama_ayah =$data['nama_ayah'];
+                                            $profesi_ayah =$data['profesi_ayah'];
+                                            $alamat_ayah =$data['alamat_ayah'];
+                                            $no_ayah =$data['no_telp_ayah'];
+
+                                            $nama_ibu =$data['nama_ibu'];
+                                            $profesi_ibu =$data['profesi_ibu'];
+                                            $alamat_ibu =$data['alamat_ibu'];
+                                            $no_ibu =$data['no_telp_ibu'];
                                     ?> <tr>
                                         <td><?=$id_siswa?></td>
+                                        <td><?=$username?></td>
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
                                         <td><?=$nisn?></td>
+                                        <td><?=$jk?></td>
+                                        <td><?=$tempat?></td>
+                                        <td><?=$tgl?></td>
+                                        <td><?=$agama?></td>
+                                        <td><?=$alamat?></td>
+                                        <td><?=$no?></td>
+                                        <td><?=$nama_ayah?></td>
+                                        <td><?=$profesi_ayah?></td>
+                                        <td><?=$alamat_ayah?></td>
+                                        <td><?=$no_ayah?></td>
+                                        <td><?=$nama_ibu?></td>
+                                        <td><?=$profesi_ibu?></td>
+                                        <td><?=$alamat_ibu?></td>
+                                        <td><?=$no_ibu?></td>
+                                        <td>
                                         <form method="POST">
                                             <input type="hidden" name="id_user" value="<?=$id_user;?>">
                                             <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
@@ -249,11 +298,14 @@ if(isset($_POST['delData'])) {
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
+                                        </td>
+                                        
                                     </tr>
                                     <?php } ?>
                                     <!--/data-->
 
                             </table>
+                            </div>
                         </div>
                     </div>
 

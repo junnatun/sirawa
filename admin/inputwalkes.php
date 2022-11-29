@@ -10,23 +10,36 @@ session_start();
 
 if (isset($_POST['addData'])){
     $id_user = getIdUser($conn);
-    $id_walikelas = $_POST['id_wali'];
     $nama = $_POST['nama'];
     $kelas = $_POST['kelas'];
-    $id_guru= mysqli_query($conn, 'SELECT id_guru FROM tb_guru WHERE nama= "$nama"');
-    $id_kelas = mysqli_query($conn, 'SELECT id_kelas FROM tb_kelas WHERE kelas= "$kelas"');
+    $id_walikelas = "WK$kelas";
+
+    $fetch_id_guru= mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama= '$nama'");
+    $data_id_guru = mysqli_fetch_array($fetch_id_guru);
+    $id_guru = $data_id_guru['id_guru'];
+
+    $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
+    $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
+    $id_kelas = $data_id_kelas['id_kelas'];
     
     $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$kelas','wali kelas')");
-    $addWali = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', 'id_kelas', 'id_guru')");
-
-    if($addUser && $addWali){
-        echo "<script>alert('Berhasil menambah data!')</script>";
-        header('Location:manajemenwalkes.php');
-    }else {
+    if($addUser){
+        $addWali = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', '$id_kelas', '$id_guru')");
+        if($addWali){
+            header('refresh:0; url=manajemenwalkes.php');
+            echo "<script>alert('Berhasil menambah data!')</script>";
+        }else{
+            echo "<script>alert('Data gagal ditambahkan!')</script>";
+            mysqli_query($conn,"DELETE FROM tb_user WHERE id_user = '$id_user'" );
+        }
+    }else{
         echo "<script>alert('Data gagal ditambahkan!')</script>";
-        header('Location: inputwalkes.php');
     }
+    
+
 }
+
+
 
 ?>
 
@@ -142,14 +155,14 @@ if (isset($_POST['addData'])){
                                 <div class="card-content">
                                     <div class="card-body">
                                         <form class="form" method="POST">
-                                            <div class="row">
+                                            <!-- <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <div class="form-group">
                                                         <label for="last-name-column">ID Wali Kelas</label>
                                                         <input name="id_wali" type="text" id="last-name-column" class="form-control" placeholder="Contoh : WK01">
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="row">
                                                 <div class="col-md-8">
                                                     <div class="form-group">

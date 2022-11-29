@@ -12,13 +12,16 @@ if($_SESSION['role']=""){
 }
 
 //GET TOTAL SISWA
-$totalSiswa = getTotalSiswa($conn);
+$totalSiswa = getTotal($conn, 'tb_siswa', 'id_siswa');
 
 //GET TOTAL GURU
-$totalGuru = getTotalGuru($conn);
+$totalGuru = getTotal($conn, 'tb_guru', 'id_guru');
 
-//GET TOTAL
-$total = getTotalSiswa($conn)+getTotalGuru($conn);
+//GET TOTAL WALI KELAS
+$totalWali = getTotal($conn, 'tb_walikelas', 'id_wali');
+
+//GET TOTAL USER
+$total = getTotal($conn, 'tb_user', 'id_user');
 
 ?>
 
@@ -123,8 +126,24 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-6 col-lg-4 col-md-6">
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <div class="card">
+                            <div class="card-body py-4 px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-xl">
+                                        <img src="../assets/images/faces/1.jpg" alt="Face 1">
+                                    </div>
+                                    <div class="ms-3 name">
+                                        <h5 class="font-bold"><?php echo $_SESSION['username']; ?></h5>
+                                        <h6 class="text-muted mb-0">@<?php echo $_SESSION['id_user']; ?></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-12 col-lg-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body px-4 py-4-5">
                                         <div class="row">
@@ -142,7 +161,7 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                 </div>
                             </div>
 
-                            <div class="col-6 col-lg-4 col-md-6">
+                            <div class="col-12 col-lg-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body px-4 py-4-5">
                                         <div class="row">
@@ -160,7 +179,25 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                 </div>
                             </div>
 
-                            <div class="col-6 col-lg-4 col-md-6">
+                            <div class="col-12 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-4 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                                <div class="stats-icon blue mb-2">
+                                                    <i class="iconly-boldProfile"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                                <h6 class="text-muted font-semibold">Jumlah Wali Kelas</h6>
+                                                <h6 class="font-extrabold mb-0"><?=$totalWali?></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body px-4 py-4-5">
                                         <div class="row">
@@ -170,7 +207,7 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Total</h6>
+                                                <h6 class="text-muted font-semibold">Total Pengguna</h6>
                                                 <h6 class="font-extrabold mb-0"><?=$total?></h6>
                                             </div>
                                         </div>
@@ -178,14 +215,15 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                 </div>
                             </div>
                         </div>
-                        <section class="section">
+                    <div class="col-12 col-lg-12">
+                    <section class="section">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="col-md-9 h4">Data Pengguna</div>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-striped" id="table1">
-                                        <thead>
+                                        <thead class="text-nowrap">
                                             <tr>
                                                 <th>ID User</th>
                                                 <th>Username</th>
@@ -204,6 +242,17 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                                                 <td><?=$id_user?></td>
                                                 <td><?=$username?></td>
                                                 <td><?=$role?></td>
+                                                <td>
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
+                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                        </td>
                                             </tr>
                                             <?php } ?>
                                             <!--/data-->
@@ -212,21 +261,7 @@ $total = getTotalSiswa($conn)+getTotalGuru($conn);
                             </div>
                         </section>
                     </div>
-                    <div class="col-12 col-lg-3">
-                        <div class="card">
-                            <div class="card-body py-4 px-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-xl">
-                                        <img src="../assets/images/faces/1.jpg" alt="Face 1">
-                                    </div>
-                                    <div class="ms-3 name">
-                                        <h5 class="font-bold"><?php echo $_SESSION['username']; ?></h5>
-                                        <h6 class="text-muted mb-0">@<?php echo $_SESSION['id_user']; ?></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </section>
             </div>
             <footer>

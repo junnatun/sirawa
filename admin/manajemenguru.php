@@ -133,29 +133,50 @@ if(isset($_POST['delData'])) {
                         </div>
 
                         <div class="card-body">
+                            <div class="table-responsive text-nowrap">
                             <table class="table table-striped" id="table1">
                                 <thead>
-                                    <tr>
+                                    <tr class="text-nowrap">
                                         <th>ID Guru</th>
+                                        <th>Username</th>
                                         <th>Nama</th>
                                         <th>NIP</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>Tempat Lahir</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Agama</th>
+                                        <th>Nomor Telepon</th>
+                                        <th>Alamat</th>
                                     </tr>
-                                </thead>
+                                </thead> 
 
                                 <!--data-->
                                 <tbody>
                                     <?php
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_guru");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_user USING(id_user)");
                                         while($data=mysqli_fetch_array($pullData)){
-                                            $id_user = $data['id_user'];
                                             $id_guru = $data['id_guru'];
+                                            $username = $data['username'];
                                             $nama =$data['nama'];
                                             $nip = $data['nip'];
+                                            $jk = $data['jenis_kelamin'];
+                                            $tempat = $data['tempat_lahir'];
+                                            $tgl = $data['tgl_lahir'];
+                                            $agama = $data['agama'];
+                                            $alamat = $data['alamat'];
+                                            $no_telp = $data['no_telp'];
                                     ?> <tr>
                                         
                                         <td><?=$id_guru?></td>
+                                        <td><?=$username?></td>
                                         <td><?=$nama?></td>
                                         <td><?=$nip?></td>
+                                        <td><?=$jk?></td>
+                                        <td><?=$tempat?></td>
+                                        <td><?=$tgl?></td>
+                                        <td><?=$agama?></td>
+                                        <td><?=$no_telp?></td>
+                                        <td><?=$alamat?></td>
                                         <td>
                                         <form method="POST">
                                             <input type="hidden" name="id_user" value="<?=$id_user;?>">
@@ -171,6 +192,7 @@ if(isset($_POST['delData'])) {
                                     <?php } ?>
                                     <!--/data-->
                             </table>
+                                        </div>
                         </div>
                     </div>
 

@@ -28,7 +28,7 @@ function getTotalKelas($conn){
 }
 
 function getTotalSiswaP($conn){
-    $sql = 'SELECT COUNT(id_siswa) AS total_siswP FROM tb_siswa WHERE jenis_kelamin ="P"';
+    $sql = 'SELECT COUNT(id_siswa) AS total_siswaP FROM tb_siswa WHERE jenis_kelamin ="P"';
     $result = mysqli_query($conn, $sql);
     if($result->num_rows>0){
         $row = mysqli_fetch_assoc($result);
@@ -37,13 +37,34 @@ function getTotalSiswaP($conn){
 }
 
 function getTotalSiswaL($conn){
-    $sql = 'SELECT COUNT(id_siswa) AS total_siswL FROM tb_siswa WHERE jenis_kelamin ="L"';
+    $sql = 'SELECT COUNT(id_siswa) AS total_siswaL FROM tb_siswa WHERE jenis_kelamin ="L"';
     $result = mysqli_query($conn, $sql);
     if($result->num_rows>0){
         $row = mysqli_fetch_assoc($result);
         return $row['total_siswaL'];
     }
 }
+
+function getTotal($conn, $table, $field) {
+    $sql = "SELECT COUNT($field) as total FROM $table";
+    $result = mysqli_query($conn, $sql);
+    if($result->num_rows>0){
+        $row = mysqli_fetch_assoc($result);
+        return $row['total'];
+    }
+}
+
+// function getLastID($conn, $table, $field, $code) {
+//     $sql = mysqli_query($conn, "SELECT max($field) as maxrow FROM $table");
+//     $data = mysqli_fetch_array($sql);
+//     $id = $data['maxrow'];
+//     $order = (int) substr($id, 4, 4);
+//     $order++;
+//     $code = $code;
+//     $id = $code . sprintf("%03s", $order);
+//     return $id;
+// }
+
 
 function getIdUser($conn){
     $sql = mysqli_query($conn, "SELECT max(id_user) as maxrow FROM tb_user");
@@ -80,6 +101,4 @@ function getIdSiswa($conn){
     return $id;
     
 }
-
-
 ?>
