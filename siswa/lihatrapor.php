@@ -9,6 +9,11 @@ session_start();
 $id_user = $_SESSION['id_user'];
 $data = mysqli_query($conn, "SELECT id_siswa, nama, nisn, kelas FROM tb_siswa s JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
 $row = mysqli_fetch_assoc($data);
+$id_siswa = $row['id_siswa'];
+$nama = $row['nama'];
+$nisn = $row['nisn'];
+$kelas = $row['kelas'];
+
 
 
 ?>

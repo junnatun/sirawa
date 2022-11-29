@@ -12,6 +12,27 @@ if(isset($_POST['delData'])) {
     mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
 }
 
+//EDIT DATA
+if (isset($_POST['editData'])) {
+    $id_user = $_POST['id_user'];
+    $nama = $_POST['nama'];
+    $nip = $_POST['nip'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $tempat = $_POST['tempat'];
+    $tgl = $_POST['tgl'];
+    $agama = $_POST['agama'];
+    $alamat = $_POST['alamat'];
+    $no_telp = $_POST['no_telp'];
+    
+    $editQuery = "UPDATE tb_guru SET nama='$nama', nip='$nip', jenis_kelamin='$jenis_kelamin', tempat_lahir = '$tempat', tgl_lahir='$tgl', agama= '$agama',alamat='$alamat', no_telp = '$no_telp' WHERE id_user='$id_user'";
+    $edit = mysqli_query($conn, $editQuery);
+    if ($edit) {
+      header('refresh:0; url=manajemenguru.php');
+      echo "<script>alert('Berhasil mengedit data guru!')</script>";
+    } else {
+      echo "<script>alert('Edit data guru gagal!')</script>";
+    }
+  }
 
 ?>
 
@@ -155,6 +176,7 @@ if(isset($_POST['delData'])) {
                                     <?php
                                         $pullData=mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_user USING(id_user)");
                                         while($data=mysqli_fetch_array($pullData)){
+                                            $id_user = $data['id_user'];
                                             $id_guru = $data['id_guru'];
                                             $username = $data['username'];
                                             $nama =$data['nama'];
@@ -177,22 +199,114 @@ if(isset($_POST['delData'])) {
                                         <td><?=$agama?></td>
                                         <td><?=$no_telp?></td>
                                         <td><?=$alamat?></td>
-                                        <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                        <td>                                        
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
+                                            <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                            </a>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal Edit -->
+                                    <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <form method="POST">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel3">Edit Data Guru</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama</label>
+                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">NIP</label>
+                                                <input type="number" name="nip" class="form-control" value="<?= $nip ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-0">
+                                                <label for="emailLarge" class="form-label">Jenis Kelamin</label>
+                                                <select class="form-select" name="jenis_kelamin" aria-label="Default select example">
+                                                    <option selected value="<?= $jk ?>"><?= $jk?></option>
+                                                    <option value="L">Laki-Laki</option>
+                                                    <option value="P">Perempuan</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Tempat Lahir</label>
+                                                <input type="text" name="tempat" class="form-control" value="<?= $tempat ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Tanggal Lahir</label>
+                                                <input type="date" name="tgl" class="form-control" value="<?= $tgl ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Agama</label>
+                                                <input type="text" name="agama" class="form-control" value="<?= $agama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon</label>
+                                                <input type="text" name="no_telp" class="form-control" value="<?= $no_telp ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat</label>
+                                                <textarea class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"></textarea>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                Batal
+                                            </button>
+                                            <button type="submit" name="editData" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+
+                                    <!-- Modal Hapus -->
+                                    <div class="modal fade" id="hapusModal<?= $id_user; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title" id="modalToggleLabel">Hapus Guru</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="POST">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id_user" value="<?= $id_user ?>">
+                                                            <p>Yakin hapus guru <b><?= $nama; ?></b> dengan ID <b><?= $id_user ?>?</b></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <?php } ?>
                                     <!--/data-->
                             </table>
-                                        </div>
+                            </div>
                         </div>
                     </div>
 
@@ -207,6 +321,7 @@ if(isset($_POST['delData'])) {
             </footer>
         </div>
     </div>
+    
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
 

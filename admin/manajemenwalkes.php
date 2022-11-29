@@ -154,17 +154,34 @@ if(isset($_POST['delData'])) {
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
                                         <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                        <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
+                                            <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                            </a>
                                         </td>
                                     </tr>
+                                    <!-- Modal Hapus -->
+                                    <div class="modal fade" id="hapusModal<?= $id_user; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title" id="modalToggleLabel">Hapus Wali Kelas</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="POST">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id_user" value="<?= $id_user ?>">
+                                                            <p>Yakin hapus wali kelas <b><?= $nama; ?></b> dengan ID <b><?= $id_user ?>?</b></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <?php } ?>
                                     
                                     <!--/data-->

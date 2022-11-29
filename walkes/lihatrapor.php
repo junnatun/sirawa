@@ -1,3 +1,26 @@
+<?php
+
+include '../config.php';
+
+error_reporting(0);
+
+session_start();
+
+$id_user = $_SESSION['id_user'];
+$data = mysqli_query($conn, "SELECT * FROM tb_walikelas JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
+$row = mysqli_fetch_assoc($data);
+$id_kelas = $row['id_kelas'];
+
+$sql = mysqli_query($conn, "SELECT COUNT(id_kelas) AS siswa FROM tb_siswa WHERE id_kelas = '$id_kelas'");
+$result= mysqli_fetch_assoc($sql);
+$siswakelas = $result['siswa'];
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,7 +133,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Kelas Wali</h6>
-                                        <h6 class="font-extrabold mb-0">9A</h6>
+                                        <h6 class="font-extrabold mb-0"><?=$row['kelas'];?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +150,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Jumlah Siswa Wali</h6>
-                                        <h6 class="font-extrabold mb-0">30</h6>
+                                        <h6 class="font-extrabold mb-0"><?=$siswakelas?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -173,9 +196,15 @@
 
                                 <!--data-->
                                 <tbody>
+                                <?php
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas = '$id_kelas'");
+                                        while($data=mysqli_fetch_array($pullData)){
+                                            $id_siswa =$data['id_siswa'];
+                                            $nama =$data['nama'];
+                                    ?>
                                     <tr>
-                                        <td>SW001</td>
-                                        <td>Amirudin</td>
+                                    <td><?=$id_siswa?></td>
+                                        <td><?=$nama?></td>
                                         <td>
                                             <a href="cetakrapor.php" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Lihat">
                                                 <i class="bi bi-file-earmark-fill"></i>
@@ -185,6 +214,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    <?php } ?>
                                     <!--/data-->
 
                             </table>
@@ -194,7 +224,7 @@
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         <p>Made with ❤ by Junnatun</p>
                     </div>

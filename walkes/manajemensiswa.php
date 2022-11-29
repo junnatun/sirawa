@@ -11,8 +11,9 @@ $data = mysqli_query($conn, "SELECT * FROM tb_walikelas JOIN tb_kelas USING(id_k
 $row = mysqli_fetch_assoc($data);
 $id_kelas = $row['id_kelas'];
 
-$siswakelas = mysqli_query($conn, "SELECT COUNT(id_kelas) FROM tb_siswa WHERE id_kelas = '$id_kelas'");
-
+$sql = mysqli_query($conn, "SELECT COUNT(id_kelas) AS siswa FROM tb_siswa WHERE id_kelas = '$id_kelas'");
+$result= mysqli_fetch_assoc($sql);
+$siswakelas = $result['siswa'];
 
 
 ?>
@@ -148,7 +149,7 @@ $siswakelas = mysqli_query($conn, "SELECT COUNT(id_kelas) FROM tb_siswa WHERE id
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Jumlah Siswa Wali</h6>
-                                        <h6 class="font-extrabold mb-0"></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$siswakelas?></h6>
                                     </div>
                                 </div>
                             </div>
