@@ -20,10 +20,54 @@ $total = getTotalSiswa($conn);
 //GET JUMLAH KELAS
 $totkelas = getTotalKelas($conn);
 
-
+//DELETE DATA
 if(isset($_POST['delData'])) {
     $id_user = $_POST['id_user'];
     mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+}
+
+//EDIT DATA
+if (isset($_POST['editData'])) {
+    $id_user = $_POST['id_user'];
+    $id_siswa = $_POST['id_siswa'];
+    $nama =$_POST['nama'];
+
+    $kelas = $_POST['kelas'];
+    // $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
+    // $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
+    // $id_kelas = $data_id_kelas['id_kelas'];
+    $id_kelas = "K$kelas";
+
+    $nisn =$_POST['nisn'];
+    $jk =$_POST['jenis_kelamin'];
+    $tempat =$_POST['tempat'];
+    $tgl =$_POST['tgl'];
+    $agama = $_POST['agama'];
+    $alamat = $_POST['alamat'];
+    $no =$_POST['no_telp'];
+
+    $nama_ayah =$_POST['nama_ayah'];
+    $profesi_ayah =$_POST['profesi_ayah'];
+    $alamat_ayah =$_POST['alamat_ayah'];
+    $no_ayah =$_POST['no_ayah'];
+
+    $nama_ibu =$_POST['nama_ibu'];
+    $profesi_ibu =$_POST['profesi_ibu'];
+    $alamat_ibu =$_POST['alamat_ibu'];
+    $no_ibu =$_POST['no_ibu'];
+    
+    $editSiswa = mysqli_query($conn, "UPDATE tb_siswa SET id_kelas='$id_kelas', nama='$nama', nisn='$nisn', jenis_kelamin='$jk', tempat_lahir = '$tempat', tgl_lahir='$tgl', agama= '$agama',alamat='$alamat', no_telp = '$no' WHERE id_user='$id_user'") ;
+    if ($editSiswa) {
+        $editOrtu = mysqli_query($conn, "UPDATE tb_ortu SET nama_ayah='$nama_ayah', profesi_ayah='$profesi_ayah', alamat_ayah='$alamat_ayah', no_telp_ayah='$no_ayah', nama_ibu='$nama_ibu', profesi_ibu='$profesi_ibu', alamat_ibu='$alamat_ibu', no_telp_ibu='$no_ibu' WHERE id_siswa='$id_siswa'");
+        if($editOrtu){
+            header('refresh:0; url=manajemensiswa.php');
+            echo "<script>alert('Berhasil mengedit data siswa!')</script>";
+        }else {
+            echo "<script>alert('Edit data siswa gagal!')</script>";
+        }
+    } else {
+        echo "<script>alert('Edit data siswa gagal!')</script>";
+    }
 }
 
 ?>
@@ -88,6 +132,12 @@ if(isset($_POST['delData'])) {
                             <a href="manajemenwalkes.php" class='sidebar-link'>
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Manajemen Wali Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
                             </a>
                         </li>
                         <li class="sidebar-item active">
@@ -246,7 +296,7 @@ if(isset($_POST['delData'])) {
                                 <!--data-->
                                 <tbody>
                                 <?php
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_ortu USING(id_siswa) JOIN tb_user USING(id_user)");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_ortu USING(id_siswa) JOIN tb_user USING(id_user) JOIN tb_kelas USING(id_kelas)");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_user =$data['id_user'];
                                             $id_siswa =$data['id_siswa'];
@@ -258,6 +308,7 @@ if(isset($_POST['delData'])) {
                                             $tempat =$data['tempat_lahir'];
                                             $tgl =$data['tgl_lahir'];
                                             $agama = $data['agama'];
+                                            $alamat = $data['alamat'];
                                             $no =$data['no_telp'];
 
                                             $nama_ayah =$data['nama_ayah'];
@@ -290,15 +341,145 @@ if(isset($_POST['delData'])) {
                                         <td><?=$alamat_ibu?></td>
                                         <td><?=$no_ibu?></td>
                                         <td>
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
-                                        
                                     </tr>
+
+                                    <!-- Modal Edit -->`
+                                    <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?= $id_user; ?>">
+                                            <input type="hidden" name="id_siswa" value="<?= $id_siswa; ?>">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel3">Edit Data Siswa</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama</label>
+                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">NISN</label>
+                                                <input type="number" name="nisn" class="form-control" value="<?= $nisn ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Kelas</label>
+                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-0">
+                                                <label for="emailLarge" class="form-label">Jenis Kelamin</label>
+                                                <select class="form-select" name="jenis_kelamin" aria-label="Default select example">
+                                                    <option selected value="<?= $jk ?>"><?= $jk?></option>
+                                                    <option value="L">Laki-Laki</option>
+                                                    <option value="P">Perempuan</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Tempat Lahir</label>
+                                                <input type="text" name="tempat" class="form-control" value="<?= $tempat ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Tanggal Lahir</label>
+                                                <input type="date" name="tgl" class="form-control" value="<?= $tgl ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Agama</label>
+                                                <input type="text" name="agama" class="form-control" value="<?= $agama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon</label>
+                                                <input type="number" name="no_telp" class="form-control" value="<?= $no ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat</label>
+                                                <input class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"></input>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama Ayah</label>
+                                                <input type="text" name="nama_ayah" class="form-control" value="<?= $nama_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Pekerjaan Ayah</label>
+                                                <input type="text" name="profesi_ayah" class="form-control" value="<?= $profesi_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat Ayah</label>
+                                                <input type="text" name="alamat_ayah" class="form-control" value="<?= $alamat_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon Ayah</label>
+                                                <input type="number" name="no_ayah" class="form-control" value="<?= $no_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama Ibu</label>
+                                                <input type="text" name="nama_ibu" class="form-control" value="<?= $nama_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Pekerjaan Ibu</label>
+                                                <input type="text" name="profesi_ibu" class="form-control" value="<?= $profesi_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat Ibu</label>
+                                                <input type="text" name="alamat_ibu" class="form-control" value="<?= $alamat_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon Ibu</label>
+                                                <input type="number" name="no_ibu" class="form-control" value="<?= $no_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                Batal
+                                            </button>
+                                            <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+
                                     <!-- Modal Hapus -->
                                     <div class="modal fade" id="hapusModal<?= $id_user; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
@@ -339,26 +520,7 @@ if(isset($_POST['delData'])) {
         </div>
     </div>
 
-    <!-- Modal Hapus -->
-    <div class="modal fade" id="hapusModal<?= $id_user; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalToggleLabel">Hapus Siswa</h3>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST">
-                    <div class="modal-body">
-                        <input type="hidden" name="id_user" value="<?= $id_user ?>">
-                            <p>Yakin hapus siswa <b><?= $nama; ?></b> dengan ID <b><?= $id_user ?>?</b></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    
     
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>

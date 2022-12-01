@@ -173,18 +173,17 @@ $kelas = $row['kelas'];
                                             <th>Nilai</th>
                                             <th>Predikat</th>
                                         </tr>
+                                        <?php
+                                        $num =1;
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_mapel");
+                                        while($data=mysqli_fetch_array($pullData)){
+                                            $mapel = $data['mapel'];
+                                        ?>
                                         <tr>
-                                            <td>1</td>
-                                            <td>Matematika</td>
-                                            <td>90</td>
-                                            <td>A</td>
+                                            <td><?=$num++;?></td>
+                                            <td><?=$mapel?></td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Ilmu Pengetahuan Alam</td>
-                                            <td>90</td>
-                                            <td>A</td>
-                                        </tr>
+                                        <?php } ?>
                                     </thead>
 
                                 </table>

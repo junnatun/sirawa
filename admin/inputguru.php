@@ -7,12 +7,11 @@ error_reporting(0);
 
 session_start();
 
-$id_user = getLastID($conn, 'tb_user', 'id_user', 'US');
-$id_guru = getLastID($conn, 'tb_guru', 'id_guru', 'GR');
+
 
 if (isset($_POST['addData'])){
-    $id_user = $_POST['id_user'];
-    $id_guru = $_POST['id_guru'];
+    $id_user = getIdUser($conn);
+    $id_guru = getIdGuru($conn);
     $nama = $_POST['nama'];
     $nip = $_POST['nip'];
     $tempat_lahir = $_POST['tempat_lahir'];
@@ -21,8 +20,10 @@ if (isset($_POST['addData'])){
     $agama = $_POST['agama'];
     $alamat = $_POST['alamat'];
     $no_telp = $_POST['no_telp'];
+    $password = generatePass($conn, $tgl_lahir);
+    $username = createUsername($conn, $nama, $tgl_lahir);
 
-    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$nama','$tgl_lahir','guru')");
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$username','$password','guru')");
     if($addUser){
         $addGuru = mysqli_query($conn, "INSERT INTO tb_guru VALUES ('$id_guru', '$id_user', '$nama', '$nip', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
         if($addGuru){
@@ -95,6 +96,12 @@ if (isset($_POST['addData'])){
                             <a href="manajemenwalkes.php" class='sidebar-link'>
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Manajemen Wali Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
                             </a>
                         </li>
                         <li class="sidebar-item">

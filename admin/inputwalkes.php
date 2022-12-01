@@ -102,6 +102,12 @@ if (isset($_POST['addData'])){
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a href="manajemensiswa.php" class='sidebar-link'>
                                 <i class="bi bi-person-fill"></i>
                                 <span>Manajemen Siswa</span>

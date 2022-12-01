@@ -1,3 +1,30 @@
+<?php
+
+include '../config.php';
+
+error_reporting(0);
+
+session_start();
+
+$id_user = $_SESSION['id_user'];
+$ambildata = mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_mapel USING(id_guru) WHERE id_user = '$id_user'");
+$result = mysqli_fetch_assoc($ambildata);
+$id_mapel = $result['id_mapel'];
+
+
+//GET KELAS YANG DIAMPU
+$id_guru=$result['id_guru'];
+$sql= mysqli_query($conn, "SELECT COUNT(id_kelas) as kelas FROM tb_mapel WHERE id_guru='$id_guru'");
+$row = mysqli_fetch_assoc($sql);
+
+//GET SISWA YANG DIAMPU
+$id_kelas = $result['id_kelas'];
+$sql2= mysqli_query($conn, "SELECT COUNT(id_siswa) as siswa from tb_siswa WHERE id_kelas='$id_kelas'");
+$row2 = mysqli_fetch_assoc($sql2);
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -104,7 +131,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Jumlah Siswa yang Diampu</h6>
-                                        <h6 class="font-extrabold mb-0">60</h6>
+                                        <h6 class="font-extrabold mb-0"><?= $row2['siswa']?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +148,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Jumlah Kelas yang Diampu</h6>
-                                        <h6 class="font-extrabold mb-0">2</h6>
+                                        <h6 class="font-extrabold mb-0"><?= $row['kelas']?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +165,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0">1</h6>
+                                        <h6 class="font-extrabold mb-0"><?= $id_kelas?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -175,25 +202,129 @@
 
                                 <!--data-->
                                 <tbody>
+                                <?php
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas='$id_kelas'");
+                                        while($data=mysqli_fetch_array($pullData)){
+                                            $id_siswa =$data['id_siswa'];
+                                            $nama =$data['nama'];
+                                            $kelas = $data['kelas'];
+                                            $ph1 = $data['ph1'];
+                                            $ph2 = $data['ph2'];
+                                            $ph3 = $data['ph3'];
+                                            $ph4 = $data['ph4'];
+                                            $pts = $data['pts'];
+                                            $pas = $data['pas'];
+                                    ?>
                                     <tr>
-                                        <td>SW001</td>
-                                        <td>Amirudin</td>
-                                        <td>9A</td>
-                                        <td>90</td>
-                                        <td>90</td>
-                                        <td>90</td>
-                                        <td>90</td>
-                                        <td>90</td>
-                                        <td>90</td>
+                                        <td><?=$id_siswa?></td>
+                                        <td><?=$nama?></td>
+                                        <td><?=$kelas?></td>
+                                        <td><?=$ph1?></td>
+                                        <td><?=$ph2?></td>
+                                        <td><?=$ph3?></td>
+                                        <td><?=$ph4?></td>
+                                        <td><?=$pts?></td>
+                                        <td><?=$pas?></td>
                                         <td>
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_siswa; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_siswa; ?>" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="#" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
+                                            <a href="#hapusModal <?= $id_siswa; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_siswa; ?>" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal Edit -->
+                                    <div class="modal fade" id="editModal<?= $id_siswa; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?= $id_siswa; ?>">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel3">Edit Nilai Siswa</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label"><?= $id_siswa ?></label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label"><?= $nama ?></label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nilai PH1</label>
+                                                <input type="number" name="ph1" class="form-control" value="<?= $ph1 ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nilai PH2</label>
+                                                <input type="number" name="ph2" class="form-control" value="<?= $ph2 ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nilai PH3</label>
+                                                <input type="number" name="ph3" class="form-control" value="<?= $ph3 ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nilai PH4</label>
+                                                <input type="number" name="ph4" class="form-control" value="<?= $ph4 ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nilai PTS</label>
+                                                <input type="number" name="pts" class="form-control" value="<?= $pts ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nilai PAS</label>
+                                                <input type="number" name="pas" class="form-control" value="<?= $pas ?>" />
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                Batal
+                                            </button>
+                                            <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+
+                                    <!-- Modal Hapus -->
+                                    <div class="modal fade" id="hapusModal<?= $id_siswa; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title" id="modalToggleLabel">Hapus Nilai</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="POST">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id_user" value="<?= $id_siswa ?>">
+                                                            <p>Yakin hapus seluruh nilai dari <b><?= $nama; ?></b></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php } ?>
                                     <!--/data-->
                             </table>
                         </div>

@@ -82,7 +82,7 @@ function getIdGuru($conn){
     $sql = mysqli_query($conn, "SELECT max(id_guru) as maxrow FROM tb_guru");
     $data = mysqli_fetch_array($sql);
     $id = $data['maxrow'];
-    $order = (int) substr($id, 3, 3);
+    $order = (int) substr($id, 2,2);
     $order++;
     $code = 'GR';
     $id = $code.sprintf("%02s", $order);
@@ -101,4 +101,30 @@ function getIdSiswa($conn){
     return $id;
     
 }
+
+function getIdMapel($conn){
+    $sql = mysqli_query($conn, "SELECT max(id_mapel) as maxrow FROM tb_mapel");
+    $data = mysqli_fetch_array($sql);
+    $id = $data['maxrow'];
+    $order = (int) substr($id, 2, 2);
+    $order++;
+    $code = 'MP';
+    $id = $code.sprintf("%02s", $order);
+    return $id;
+    
+}
+
+function generatePass($conn, $tgl){
+    return preg_replace("/-/", "", $tgl);
+}
+
+function createUsername($conn, $nama, $tgl){
+    $revTgl =preg_replace("/-/", "", $tgl );
+    $cutName= substr($nama, 0,3);
+    $cutNumber= substr($revTgl, 4, 4);
+    $username= $cutName.$cutNumber;
+    return $username;
+}
+
+
 ?>

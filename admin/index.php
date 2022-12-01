@@ -23,6 +23,29 @@ $totalWali = getTotal($conn, 'tb_walikelas', 'id_wali');
 //GET TOTAL USER
 $total = getTotal($conn, 'tb_user', 'id_user');
 
+//DELETE DATA
+if(isset($_POST['delData'])) {
+    $id_user = $_POST['id_user'];
+    mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+}
+
+//EDIT DATA
+if (isset($_POST['editData'])) {
+    $id_user = $_POST['id_user'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
+    
+    $editQuery = "UPDATE tb_user SET username='$username', password='$password', role='$role' WHERE id_user='$id_user'";
+    $edit = mysqli_query($conn, $editQuery);
+    if ($edit) {
+        header('refresh:0; url=index.php');
+        echo "<script>alert('Berhasil mengedit data pengguna!')</script>";
+    } else {
+        echo "<script>alert('Edit data pengguna gagal!')</script>";
+    }
+}
+
 ?>
 
 
@@ -83,6 +106,12 @@ $total = getTotal($conn, 'tb_user', 'id_user');
                             <a href="manajemenwalkes.php" class='sidebar-link'>
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Manajemen Wali Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -237,23 +266,85 @@ $total = getTotal($conn, 'tb_user', 'id_user');
                                                 while($data=mysqli_fetch_array($pullData)){
                                                     $id_user = $data['id_user'];
                                                     $username =$data['username'];
+                                                    $password = $data['password'];
                                                     $role = $data['role'];
                                             ?> <tr>
                                                 <td><?=$id_user?></td>
                                                 <td><?=$username?></td>
                                                 <td><?=$role?></td>
                                                 <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <button name="delData" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                        </td>
+                                                    <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
+                                            
+                                            <!-- Modal Edit -->
+                                            <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <form method="POST">
+                                                        <input type="hidden" name="id_user" value="<?= $id_user; ?>">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel3">Edit Data Pengguna</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col mb-3">
+                                                                        <label for="nameLarge" class="form-label">Username</label>
+                                                                        <input type="text" name="username" class="form-control" value="<?= $username ?>" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col mb-3">
+                                                                        <label for="nameLarge" class="form-label">Password</label>
+                                                                        <input type="text" name="password" class="form-control" value="<?= $password ?>" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col mb-3">
+                                                                        <label for="nameLarge" class="form-label">Role</label>
+                                                                        <input type="text" name="role" class="form-control" value="<?= $role ?>" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                                    Batal
+                                                                </button>
+                                                                <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            
+                                            <!-- Modal Hapus -->
+                                            <div class="modal fade" id="hapusModal<?= $id_user; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="modal-title" id="modalToggleLabel">Hapus Pengguna</h3>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form method="POST">
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="id_user" value="<?= $id_user ?>">
+                                                                    <p>Yakin hapus pengguna <b><?= $username; ?></b> dengan ID <b><?= $id_user ?>?</b></p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <?php } ?>
                                             <!--/data-->
                                     </table>

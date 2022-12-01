@@ -27,12 +27,12 @@ if (isset($_POST['editData'])) {
     $editQuery = "UPDATE tb_guru SET nama='$nama', nip='$nip', jenis_kelamin='$jenis_kelamin', tempat_lahir = '$tempat', tgl_lahir='$tgl', agama= '$agama',alamat='$alamat', no_telp = '$no_telp' WHERE id_user='$id_user'";
     $edit = mysqli_query($conn, $editQuery);
     if ($edit) {
-      header('refresh:0; url=manajemenguru.php');
-      echo "<script>alert('Berhasil mengedit data guru!')</script>";
+        header('refresh:0; url=manajemenguru.php');
+        echo "<script>alert('Berhasil mengedit data guru!')</script>";
     } else {
-      echo "<script>alert('Edit data guru gagal!')</script>";
+        echo "<script>alert('Edit data guru gagal!')</script>";
     }
-  }
+}
 
 ?>
 
@@ -95,6 +95,12 @@ if (isset($_POST['editData'])) {
                             <a href="manajemenwalkes.php" class='sidebar-link'>
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Manajemen Wali Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -213,6 +219,7 @@ if (isset($_POST['editData'])) {
                                     <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?= $id_user; ?>">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel3">Edit Data Guru</h5>
@@ -262,13 +269,13 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Nomor Telepon</label>
-                                                <input type="text" name="no_telp" class="form-control" value="<?= $no_telp ?>" />
+                                                <input type="number" name="no_telp" class="form-control" value="<?= $no_telp ?>" />
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat</label>
-                                                <textarea class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"></textarea>
+                                                <input class="form-control" name="alamat" rows="3" value="<?= $alamat ?>"></input>
                                                 </div>
                                             </div>
                                             </div>
@@ -276,7 +283,7 @@ if (isset($_POST['editData'])) {
                                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                                 Batal
                                             </button>
-                                            <button type="submit" name="editData" class="btn btn-primary">Simpan</button>
+                                            <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
                                             </div>
                                         </div>
                                         </form>

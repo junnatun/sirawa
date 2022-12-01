@@ -6,10 +6,35 @@ error_reporting(0);
 
 session_start();
 
+//DELETE DATA
 if(isset($_POST['delData'])) {
     $id_user = $_POST['id_user'];
     mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
 }
+
+//EDIT DATA
+if (isset($_POST['editData'])) {
+    $id_user = $_POST['id_user'];
+
+    $nama = $_POST['nama'];
+    $fetch_id_guru = mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama='$nama'");
+    $data_id_guru = mysqli_fetch_array($fetch_id_guru);
+    $id_guru = $data_id_guru['id_guru'];
+
+    $kelas = $_POST['kelas'];
+    $id_kelas = "K$kelas";
+    
+    
+    $editQuery = "UPDATE tb_walikelas SET id_kelas='$id_kelas', id_guru='$id_guru' WHERE id_user='$id_user'";
+    $edit = mysqli_query($conn, $editQuery);
+    if ($edit) {
+        header('refresh:0; url=manajemenwalkes.php');
+        echo "<script>alert('Berhasil mengedit data wali kelas!')</script>";
+    } else {
+        echo "<script>alert('Edit data wali kelas gagal!')</script>";
+    }
+}
+
 
 ?>
 
@@ -72,6 +97,12 @@ if(isset($_POST['delData'])) {
                             <a href="manajemenwalkes.php" class='sidebar-link'>
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Manajemen Wali Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -154,7 +185,7 @@ if(isset($_POST['delData'])) {
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
                                         <td>
-                                        <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
@@ -162,6 +193,42 @@ if(isset($_POST['delData'])) {
                                             </a>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal Edit -->
+                                    <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?= $id_user; ?>">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel3">Edit Data Wali Kelas</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama</label>
+                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Kelas Wali</label>
+                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                Batal
+                                            </button>
+                                            <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+
                                     <!-- Modal Hapus -->
                                     <div class="modal fade" id="hapusModal<?= $id_user; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
@@ -183,7 +250,6 @@ if(isset($_POST['delData'])) {
                                         </div>
                                     </div>
                                     <?php } ?>
-                                    
                                     <!--/data-->
 
                             </table>

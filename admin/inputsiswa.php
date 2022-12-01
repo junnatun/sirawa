@@ -38,8 +38,11 @@ if (isset($_POST['addData'])){
     $profesi_ibu = $_POST['profesi_ibu'];
     $alamat_ibu = $_POST['alamat_ibu'];
     $no_telp_ibu = $_POST['no_telp_ibu'];
+
+    $password = generatePass($conn, $tgl_lahir);
+    $username = createUsername($conn, $nama, $tgl_lahir);
     
-    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$nama','$tgl_lahir','siswa')");
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$username','$password','siswa')");
     if($addUser){
         $addSiswa = mysqli_query($conn, "INSERT INTO tb_siswa VALUES ('$id_siswa', '$id_user', '$id_kelas','$nama', '$nisn', '$jenis_kelamin', '$tempat_lahir', '$tgl_lahir', '$agama', '$alamat', '$no_telp')");
         if($addSiswa){
@@ -120,6 +123,12 @@ if (isset($_POST['addData'])){
                             <a href="manajemenwalkes.php" class='sidebar-link'>
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Manajemen Wali Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="manajemenmapel.php" class='sidebar-link'>
+                                <i class="bi bi-folder"></i>
+                                <span>Manajemen Mapel</span>
                             </a>
                         </li>
                         <li class="sidebar-item active">

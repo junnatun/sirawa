@@ -15,7 +15,46 @@ $sql = mysqli_query($conn, "SELECT COUNT(id_kelas) AS siswa FROM tb_siswa WHERE 
 $result= mysqli_fetch_assoc($sql);
 $siswakelas = $result['siswa'];
 
+//EDIT DATA
+if (isset($_POST['editData'])) {
+    $id_user = $_POST['id_user'];
+    $id_siswa = $_POST['id_siswa'];
+    $nama =$_POST['nama'];
 
+    $kelas = $_POST['kelas'];
+    $id_kelas = "K$kelas";
+
+    $nisn =$_POST['nisn'];
+    $jk =$_POST['jenis_kelamin'];
+    $tempat =$_POST['tempat'];
+    $tgl =$_POST['tgl'];
+    $agama = $_POST['agama'];
+    $alamat = $_POST['alamat'];
+    $no =$_POST['no_telp'];
+
+    $nama_ayah =$_POST['nama_ayah'];
+    $profesi_ayah =$_POST['profesi_ayah'];
+    $alamat_ayah =$_POST['alamat_ayah'];
+    $no_ayah =$_POST['no_ayah'];
+
+    $nama_ibu =$_POST['nama_ibu'];
+    $profesi_ibu =$_POST['profesi_ibu'];
+    $alamat_ibu =$_POST['alamat_ibu'];
+    $no_ibu =$_POST['no_ibu'];
+    
+    $editSiswa = mysqli_query($conn, "UPDATE tb_siswa SET id_kelas='$id_kelas', nama='$nama', nisn='$nisn', jenis_kelamin='$jk', tempat_lahir = '$tempat', tgl_lahir='$tgl', agama= '$agama',alamat='$alamat', no_telp = '$no' WHERE id_user='$id_user'") ;
+    if ($editSiswa) {
+        $editOrtu = mysqli_query($conn, "UPDATE tb_ortu SET nama_ayah='$nama_ayah', profesi_ayah='$profesi_ayah', alamat_ayah='$alamat_ayah', no_telp_ayah='$no_ayah', nama_ibu='$nama_ibu', profesi_ibu='$profesi_ibu', alamat_ibu='$alamat_ibu', no_telp_ibu='$no_ibu' WHERE id_siswa='$id_siswa'");
+        if($editOrtu){
+            header('refresh:0; url=manajemensiswa.php');
+            echo "<script>alert('Berhasil mengedit data siswa!')</script>";
+        }else {
+            echo "<script>alert('Edit data siswa gagal!')</script>";
+        }
+    } else {
+        echo "<script>alert('Edit data siswa gagal!')</script>";
+    }
+}
 ?>
 
 
@@ -184,41 +223,216 @@ $siswakelas = $result['siswa'];
                         </div>
 
                         <div class="card-body">
+                        <div class="table-responsive text-nowrap">
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Siswa</th>
                                         <th>Nama</th>
-                                        <th>NISN</th>
                                         <th>Kelas</th>
+                                        <th>NISN</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>Tempat Lahir</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Agama</th>
+                                        <th>Alamat</th>
+                                        <th>Telp</th>
+                                        <th>Nama Ayah</th>
+                                        <th>Pekerjaan Ayah</th>
+                                        <th>Alamat Ayah</th>
+                                        <th>Telp Ayah</th>
+                                        <th>Nama Ibu</th>
+                                        <th>Pekerjaan Ibu</th>
+                                        <th>Alamat Ibu</th>
+                                        <th>Telp Ibu</th>
                                     </tr>
                                 </thead>
                                 <!--data-->
                                 <tbody>
                                 <?php
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas = '$id_kelas'");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_ortu USING(id_siswa) JOIN tb_user USING(id_user) JOIN tb_kelas USING(id_kelas)");
                                         while($data=mysqli_fetch_array($pullData)){
+                                            $id_user =$data['id_user'];
                                             $id_siswa =$data['id_siswa'];
                                             $nama =$data['nama'];
-                                            $nisn =$data['nisn'];
                                             $kelas = $data['kelas'];
+                                            $nisn =$data['nisn'];
+                                            $jk =$data['jenis_kelamin'];
+                                            $tempat =$data['tempat_lahir'];
+                                            $tgl =$data['tgl_lahir'];
+                                            $agama = $data['agama'];
+                                            $alamat = $data['alamat'];
+                                            $no =$data['no_telp'];
+
+                                            $nama_ayah =$data['nama_ayah'];
+                                            $profesi_ayah =$data['profesi_ayah'];
+                                            $alamat_ayah =$data['alamat_ayah'];
+                                            $no_ayah =$data['no_telp_ayah'];
+
+                                            $nama_ibu =$data['nama_ibu'];
+                                            $profesi_ibu =$data['profesi_ibu'];
+                                            $alamat_ibu =$data['alamat_ibu'];
+                                            $no_ibu =$data['no_telp_ibu'];
                                     ?> <tr>
                                         <td><?=$id_siswa?></td>
                                         <td><?=$nama?></td>
-                                        <td><?=$nisn?></td>
                                         <td><?=$kelas?></td>
+                                        <td><?=$nisn?></td>
+                                        <td><?=$jk?></td>
+                                        <td><?=$tempat?></td>
+                                        <td><?=$tgl?></td>
+                                        <td><?=$agama?></td>
+                                        <td><?=$alamat?></td>
+                                        <td><?=$no?></td>
+                                        <td><?=$nama_ayah?></td>
+                                        <td><?=$profesi_ayah?></td>
+                                        <td><?=$alamat_ayah?></td>
+                                        <td><?=$no_ayah?></td>
+                                        <td><?=$nama_ibu?></td>
+                                        <td><?=$profesi_ibu?></td>
+                                        <td><?=$alamat_ibu?></td>
+                                        <td><?=$no_ibu?></td>
                                         <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="id_user" value="<?=$id_user;?>">
-                                            <a href="#" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                        </form>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal Edit -->`
+                                    <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <form method="POST">
+                                            <input type="hidden" name="id_user" value="<?= $id_user; ?>">
+                                            <input type="hidden" name="id_siswa" value="<?= $id_siswa; ?>">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel3">Edit Data Siswa</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama</label>
+                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">NISN</label>
+                                                <input type="number" name="nisn" class="form-control" value="<?= $nisn ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Kelas</label>
+                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-0">
+                                                <label for="emailLarge" class="form-label">Jenis Kelamin</label>
+                                                <select class="form-select" name="jenis_kelamin" aria-label="Default select example">
+                                                    <option selected value="<?= $jk ?>"><?= $jk?></option>
+                                                    <option value="L">Laki-Laki</option>
+                                                    <option value="P">Perempuan</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Tempat Lahir</label>
+                                                <input type="text" name="tempat" class="form-control" value="<?= $tempat ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Tanggal Lahir</label>
+                                                <input type="date" name="tgl" class="form-control" value="<?= $tgl ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Agama</label>
+                                                <input type="text" name="agama" class="form-control" value="<?= $agama ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon</label>
+                                                <input type="number" name="no_telp" class="form-control" value="<?= $no ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat</label>
+                                                <input class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"></input>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama Ayah</label>
+                                                <input type="text" name="nama_ayah" class="form-control" value="<?= $nama_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Pekerjaan Ayah</label>
+                                                <input type="text" name="profesi_ayah" class="form-control" value="<?= $profesi_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat Ayah</label>
+                                                <input type="text" name="alamat_ayah" class="form-control" value="<?= $alamat_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon Ayah</label>
+                                                <input type="number" name="no_ayah" class="form-control" value="<?= $no_ayah ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nama Ibu</label>
+                                                <input type="text" name="nama_ibu" class="form-control" value="<?= $nama_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Pekerjaan Ibu</label>
+                                                <input type="text" name="profesi_ibu" class="form-control" value="<?= $profesi_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Alamat Ibu</label>
+                                                <input type="text" name="alamat_ibu" class="form-control" value="<?= $alamat_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">Nomor Telepon Ibu</label>
+                                                <input type="number" name="no_ibu" class="form-control" value="<?= $no_ibu ?>" >
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                Batal
+                                            </button>
+                                            <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+
                                     <?php } ?>
                                     <!--/data-->
                             </table>
+                        </div>
                         </div>
                     </div>
                 </section>
