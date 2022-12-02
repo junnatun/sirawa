@@ -13,6 +13,7 @@ $id_siswa = $row['id_siswa'];
 $nama = $row['nama'];
 $nisn = $row['nisn'];
 $kelas = $row['kelas'];
+$id_kelas = "K$kelas";
 
 
 
@@ -155,16 +156,6 @@ $kelas = $row['kelas'];
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-lg">
-                                    <thead>
-                                        <tr>
-                                            <th>Nilai Sikap</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -175,13 +166,39 @@ $kelas = $row['kelas'];
                                         </tr>
                                         <?php
                                         $num =1;
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_mapel");
+                                        $totalNilai=0;
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) WHERE id_siswa='$id_siswa' AND id_kelas='$id_kelas'");
                                         while($data=mysqli_fetch_array($pullData)){
-                                            $mapel = $data['mapel'];
+                                            $id_mapel = $data['id_mapel'];
+                                            $getMapel = mysqli_query($conn, "SELECT * FROM tb_mapel WHERE id_mapel='$id_mapel'");
+                                            $row= mysqli_fetch_array($getMapel);
+                                            $mapel= $row['mapel'];
+
+                                            $ph1 = $data['nilai_ph1'];
+                                            $ph2 = $data['nilai_ph2'];
+                                            $ph3 = $data['nilai_ph3'];
+                                            $ph4 = $data['nilai_ph4'];
+                                            $pts = $data['nilai_pts'];
+                                            $pas = $data['nilai_pas'];
+
+                                            $nilaiRapor = (($ph1+$ph2+$ph3+$ph4+$pts+$pas)/6);
+                                            $totalNilai+=$nilaiRapor;
+                                            if($nilaiRapor <61){
+                                                $predikat = 'D';
+                                            } else if($nilaiRapor <74){
+                                                $predikat = 'C';
+                                            } else if($nilaiRapor <87){
+                                                $predikat = 'B';
+                                            }else if($nilaiRapor >=87){
+                                                $predikat = 'A';
+                                            }
                                         ?>
                                         <tr>
                                             <td><?=$num++;?></td>
                                             <td><?=$mapel?></td>
+                                            <td><?=$nilaiRapor?></td>
+                                            <td><?=$predikat?></td>
+                                            
                                         </tr>
                                         <?php } ?>
                                     </thead>
@@ -194,15 +211,11 @@ $kelas = $row['kelas'];
                                         <thead>
                                             <tr>
                                                 <th>Total Nilai</th>
-                                                <th></th>
+                                                <th><?=$totalNilai?></th>
                                             </tr>
                                             <tr>
                                                 <th>Nilai Rata-Rata</th>
-                                                <th></th>
-                                            </tr>
-                                            <tr>
-                                                <th>Peringkat</th>
-                                                <th></th>
+                                                <th><?=$totalNilai/($num-1)?></th>
                                             </tr>
                                         </thead>
                                     </table>

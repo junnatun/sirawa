@@ -83,8 +83,8 @@ $row = mysqli_fetch_assoc($data);
                 <!--/menu-->
             </div>
         </div>
+        
         <div id="main">
-
             <div class="page-heading">
                 <h3>Dashboard</h3>
             </div>

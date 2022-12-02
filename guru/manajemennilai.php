@@ -19,8 +19,68 @@ $row = mysqli_fetch_assoc($sql);
 
 //GET SISWA YANG DIAMPU
 $id_kelas = $result['id_kelas'];
-$sql2= mysqli_query($conn, "SELECT COUNT(id_siswa) as siswa from tb_siswa WHERE id_kelas='$id_kelas'");
+$sql2= mysqli_query($conn, "SELECT COUNT(id_siswa) AS siswa FROM tb_nilai WHERE id_mapel='$id_mapel'");
 $row2 = mysqli_fetch_assoc($sql2);
+
+
+//AMBIL DATA
+if(isset($_POST['getDataSiswa'])) {
+
+    $semester = $_POST['semester'];
+
+    $ambil_data_siswa = mysqli_query($conn,"SELECT id_siswa FROM tb_mapel JOIN tb_siswa USING(id_kelas) JOIN tb_kelas USING(id_kelas) WHERE id_mapel='$id_mapel'");
+
+    while ($data = mysqli_fetch_array($ambil_data_siswa)) {
+        $id_siswa = $data['id_siswa'];
+
+        $sql = "INSERT INTO tb_nilai
+            VALUES ('$id_siswa', '$id_mapel', '$semester', '0', '0', '0', '0', '0', '0')";
+
+        $addToTable = mysqli_query($conn, $sql);
+        if($addToTable) {
+            header('refresh:0; url=manajemennilai.php');
+            echo "<script>alert('Yeay, Ambil Data berhasil!')</script>";
+        } else {
+            echo "<script>alert('Yahh, Ambil Data gagal!')</script>";
+        }
+    }
+}
+
+//EDIT DATA
+if(isset($_POST['editData'])){
+    $id_siswa=$_POST['id_siswa'];
+    $semester=$_POST['semester'];
+    $ph1=$_POST['ph1'];
+    $ph2=$_POST['ph2'];
+    $ph3=$_POST['ph3'];
+    $ph4=$_POST['ph4'];
+    $pts=$_POST['pts'];
+    $pas=$_POST['pas'];
+
+    $editNilai=mysqli_query($conn,"UPDATE tb_nilai SET nilai_ph1='$ph1', nilai_ph2='$ph2', nilai_ph3='$ph3', nilai_ph4='$ph4', nilai_pts='$pts', nilai_pas='$pas' WHERE id_siswa='$id_siswa' AND semester='$semester'");
+    if($editNilai){
+        header('refresh:0; url=manajemennilai.php');
+        echo "<script>alert('Berhasil mengedit nilai siswa!')</script>";
+    }else {
+        echo "<script>alert('Edit data nilai gagal!')</script>";
+    }
+    
+}
+
+//HAPUS NILAI
+if(isset($_POST['delData'])){
+    $id_siswa=$_POST['id_siswa'];
+    $semester=$_POST['semester'];
+    $id_mapel=$_POST['id_mapel'];
+
+    $resetNilai=mysqli_query($conn,"UPDATE tb_nilai SET nilai_ph1='0', nilai_ph2='0', nilai_ph3='0', nilai_ph4='0', nilai_pts='0', nilai_pas='0' WHERE id_siswa='$id_siswa' AND semester='$semester' AND id_mapel='$id_mapel'");
+    if($resetNilai){
+        header('refresh:0; url=manajemennilai.php');
+        echo "<script>alert('Berhasil menghapus nilai siswa!')</script>";
+    }else {
+        echo "<script>alert('Hapus data nilai gagal!')</script>";
+    }
+}
 
 ?>
 
@@ -179,9 +239,11 @@ $row2 = mysqli_fetch_assoc($sql2);
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-9 h4">Data Nilai Siswa</div>
-                                <a href="inputnilai.php" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="upload"></i>Input Nilai</a>
-
+                                <!-- <a href="#inputModal" data-bs-toggle="modal" data-bs-target="#inputModal" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="upload"></i>Input Nilai</a> -->
+                                <a href="#getDataModal" data-bs-toggle="modal" data-bs-target="#getDataModal" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="download"></i>Ambil Data Siswa</a>
                             </div>
+
+                            
                         </div>
 
                         <div class="card-body">
@@ -203,17 +265,18 @@ $row2 = mysqli_fetch_assoc($sql2);
                                 <!--data-->
                                 <tbody>
                                 <?php
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas='$id_kelas'");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) JOIN tb_kelas USING(id_kelas) WHERE id_mapel='$id_mapel'");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_siswa =$data['id_siswa'];
                                             $nama =$data['nama'];
                                             $kelas = $data['kelas'];
-                                            $ph1 = $data['ph1'];
-                                            $ph2 = $data['ph2'];
-                                            $ph3 = $data['ph3'];
-                                            $ph4 = $data['ph4'];
-                                            $pts = $data['pts'];
-                                            $pas = $data['pas'];
+                                            $semester = $data['semester'];
+                                            $ph1 = $data['nilai_ph1'];
+                                            $ph2 = $data['nilai_ph2'];
+                                            $ph3 = $data['nilai_ph3'];
+                                            $ph4 = $data['nilai_ph4'];
+                                            $pts = $data['nilai_pts'];
+                                            $pas = $data['nilai_pas'];
                                     ?>
                                     <tr>
                                         <td><?=$id_siswa?></td>
@@ -239,7 +302,8 @@ $row2 = mysqli_fetch_assoc($sql2);
                                     <div class="modal fade" id="editModal<?= $id_siswa; ?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
-                                            <input type="hidden" name="id_user" value="<?= $id_siswa; ?>">
+                                            <input type="hidden" name="id_siswa" value="<?= $id_siswa; ?>">
+                                            <input type="hidden" name="semester" value="<?= $semester; ?>">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel3">Edit Nilai Siswa</h5>
@@ -247,13 +311,11 @@ $row2 = mysqli_fetch_assoc($sql2);
                                             </div>
                                             <div class="modal-body">
                                             <div class="row">
-                                                <div class="col mb-3">
-                                                <label for="nameLarge" class="form-label"><?= $id_siswa ?></label>
+                                                <div class="col mb-3 col-md-10">
+                                                <label for="nameLarge" class="form-label"><h5><?= $id_siswa ?> - <?= $kelas; ?> - <?= $nama ?></h5></label>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col mb-3">
-                                                <label for="nameLarge" class="form-label"><?= $nama ?></label>
+                                                <div class="col mb-3 col-md-2">
+                                                <label for="nameLarge" class="form-label">Semester <?= $semester ?></label>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -314,8 +376,10 @@ $row2 = mysqli_fetch_assoc($sql2);
                                                 </div>
                                                 <form method="POST">
                                                     <div class="modal-body">
-                                                        <input type="hidden" name="id_user" value="<?= $id_siswa ?>">
-                                                            <p>Yakin hapus seluruh nilai dari <b><?= $nama; ?></b></p>
+                                                        <input type="hidden" name="id_siswa" value="<?= $id_siswa ?>">
+                                                        <input type="hidden" name="semester" value="<?= $semester ?>">
+                                                        <input type="hidden" name="id_mapel" value="<?= $id_mapel ?>">
+                                                            <p>Yakin hapus menghapus nilai dari <b><?= $nama; ?></b></p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
@@ -333,7 +397,7 @@ $row2 = mysqli_fetch_assoc($sql2);
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         <p>Made with ❤ by Junnatun</p>
                     </div>
@@ -341,6 +405,38 @@ $row2 = mysqli_fetch_assoc($sql2);
             </footer>
         </div>
     </div>
+
+    <!-- Modal Get Data -->
+    <div class="modal fade" id="getDataModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <form method="POST">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">Ambil Data Siswa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col mb-5">
+                        <label for="emailLarge" class="form-label">Semester</label>
+                        <select class="form-select" name="semester" aria-label="Default select example">
+                            <option value=1>1 - Gasal</option>
+                            <option value=2>2 - Genap</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                Batal
+                </button>
+                <button type="submit" name="getDataSiswa" class="btn btn-primary">Ambil</button>
+            </div>
+            </div>
+        </form>
+        </div>
+    </div>
+
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
 

@@ -33,9 +33,6 @@ if (isset($_POST['editData'])) {
     $nama =$_POST['nama'];
 
     $kelas = $_POST['kelas'];
-    // $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
-    // $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
-    // $id_kelas = $data_id_kelas['id_kelas'];
     $id_kelas = "K$kelas";
 
     $nisn =$_POST['nisn'];

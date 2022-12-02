@@ -11,6 +11,27 @@ session_start();
 $id_user = $_SESSION['id_user'];
 $data = mysqli_query($conn, "SELECT nama FROM tb_guru WHERE id_user = '$id_user'");
 $result = mysqli_fetch_assoc($data);
+
+$id_user = $_SESSION['id_user'];
+$ambildata = mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_mapel USING(id_guru) WHERE id_user = '$id_user'");
+$result = mysqli_fetch_assoc($ambildata);
+$id_mapel = $result['id_mapel'];
+
+//GET SISWA YANG DIAMPU
+$id_kelas = $result['id_kelas'];
+$sql= mysqli_query($conn, "SELECT COUNT(id_siswa) AS siswa FROM tb_nilai WHERE id_mapel='$id_mapel'");
+$row = mysqli_fetch_assoc($sql);
+$jumlahSiswa=$row['siswa'];
+
+//HITUNG INPUT NILAI
+$sql2 = mysqli_query($conn, "SELECT COUNT(id_siswa) AS hitung FROM (SELECT * FROM tb_nilai WHERE id_mapel='$id_mapel') AS allData 
+        WHERE nilai_ph1<>0 AND nilai_ph2<>0 AND nilai_ph3<>0 AND nilai_ph4<>0 AND nilai_pts<>0 AND nilai_pas<>0");
+$row2 = mysqli_fetch_assoc($sql2);
+$sudahInput=$row2['hitung'];
+
+
+//PROGRES
+$progres = ($sudahInput/$jumlahSiswa)*100;
 ?>
 
 
@@ -118,7 +139,7 @@ $result = mysqli_fetch_assoc($data);
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                 <h6 class="text-muted font-semibold">Siswa yang Diampu</h6>
-                                                <h6 class="font-extrabold mb-0">60</h6>
+                                                <h6 class="font-extrabold mb-0"><?= $jumlahSiswa ?></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -136,7 +157,7 @@ $result = mysqli_fetch_assoc($data);
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                 <h6 class="text-muted font-semibold">Sudah Input Nilai</h6>
-                                                <h6 class="font-extrabold mb-0">30</h6>
+                                                <h6 class="font-extrabold mb-0"><?= $sudahInput?></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -154,27 +175,13 @@ $result = mysqli_fetch_assoc($data);
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                 <h6 class="text-muted font-semibold">Progres</h6>
-                                                <h6 class="font-extrabold mb-0">50%</h6>
+                                                <h6 class="font-extrabold mb-0"><?= $progres?>%</h6>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Nilai Rata-Rata Siswa</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="chart-profile-visit"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                     <div class="col-12 col-lg-3">
                         <div class="card">

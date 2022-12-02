@@ -8,7 +8,8 @@ error_reporting(0);
 session_start();
 
 if($_SESSION['role']=""){
-    header("Location:../index.php?pesan=gagal");
+    header("Location:../index.php");
+    exit();
 }
 
 //GET TOTAL SISWA

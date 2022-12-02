@@ -71,18 +71,6 @@ $siswakelas = $result['siswa'];
                                 <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="manajemensiswa.php" class='sidebar-link'>
-                                <i class="bi bi-people-fill"></i>
-                                <span>Manajemen Siswa</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="manajemennilai.php" class='sidebar-link'>
-                                <i class="bi bi-table"></i>
-                                <span>Manajemen Nilai Siswa</span>
-                            </a>
-                        </li>
                         <li class="sidebar-item active">
                             <a href="lihatrapor.php" class='sidebar-link'>
                                 <i class="bi bi-award-fill"></i>
@@ -203,17 +191,19 @@ $siswakelas = $result['siswa'];
                                             $nama =$data['nama'];
                                     ?>
                                     <tr>
-                                    <td><?=$id_siswa?></td>
+                                        <td><?=$id_siswa?></td>
                                         <td><?=$nama?></td>
                                         <td>
-                                            <a href="cetakrapor.php" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Lihat">
-                                                <i class="bi bi-file-earmark-fill"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-success icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cetak">
-                                                <i class="bi bi-printer-fill"></i>
-                                            </a>
+                                            <form method="POST" action="cetakrapor.php">
+                                                <input type="hidden" name="id_siswa" value="<?= $id_siswa ?>">
+                                                <button type="submit" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Lihat">
+                                                    <i class="bi bi-file-earmark-fill"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
+
+                                    
                                     <?php } ?>
                                     <!--/data-->
 
