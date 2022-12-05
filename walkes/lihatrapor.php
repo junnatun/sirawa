@@ -6,6 +6,23 @@ error_reporting(0);
 
 session_start();
 
+//Inisialisasi nilai POST untuk sorting
+if ($_POST['sort_by'] == '') {
+    $sortBy = 'id_siswa';
+    $sortType = 'ASC';
+    $_POST['sort_by'] = $sortBy;
+    $_POST['sort_type'] = $sortType;
+}
+
+//Inisialisasi nilai POST untuk searching
+if ($_POST['search_value'] == '') {
+    $searchValue = '';
+    $placeHolder = 'Cari..';
+} else {
+    $searchValue = $_POST['search_value'];
+    $placeHolder = '';
+}
+
 $id_user = $_SESSION['id_user'];
 $data = mysqli_query($conn, "SELECT * FROM tb_walikelas JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
 $row = mysqli_fetch_assoc($data);
@@ -170,6 +187,33 @@ $siswakelas = $result['siswa'];
                             <div class="row">
                                 <div class="col-md-9 h4">Rapor Siswa</div>
                             </div>
+                            <div class="row g-2 d-flex justify-content-between mt-3">
+                                <div class="col-md-6">
+                                    <form method="POST">
+                                        <div class="input-group">
+                                            <select class="form-select" id="" aria-label="Example select with button addon" name="sort_by">
+                                                <option selected value="<?= $_POST['sort_by'] ?>"><?= strtoupper(preg_replace("/_/", " ",  $_POST['sort_by'])) ?></option>
+                                                <option value="id_siswa">ID Siswa</option>
+                                                <option value="nama">Nama</option>
+                                            </select>
+                                            <select class="form-select" id="inputGroupSelect04" name="sort_type">
+                                                <option selected value="<?= $_POST['sort_type'] ?>"><?= $_POST['sort_type'] ?>ENDING</option>
+                                                <option value="ASC">Ascending</option>
+                                                <option value="DESC">Descending</option>
+                                            </select>
+                                            <button class="btn btn-primary" type="submit" name="submitSort">Sort</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <form method="POST">
+                                        <div class="input-group">
+                                            <input type="text" name="search_value" class="form-control" placeholder="<?= $placeHolder ?>" value="<?= $searchValue ?>" aria-describedby="button-addon2" />
+                                            <button class="btn btn-primary" type="submit" id="button-addon2" name="submitSearch">Search</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="card-body">
@@ -185,6 +229,16 @@ $siswakelas = $result['siswa'];
                                 <!--data-->
                                 <tbody>
                                 <?php
+                                        if (isset($_POST['submitSort'])) {
+                                            $sortBy = $_POST['sort_by'];
+                                            $sortType = $_POST['sort_type'];
+                                            header('refresh:0; url=lihatrapor.php');
+                                        }
+                    
+                                        if (isset($_POST['submitSearch'])) {
+                                            $searchValue = $_POST['search_value'];
+                                            header('refresh:0; url=lihatrapor.php');
+                                        }
                                         $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas = '$id_kelas'");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_siswa =$data['id_siswa'];
@@ -216,7 +270,8 @@ $siswakelas = $result['siswa'];
             <footer>
                 <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
-                        <p>Made with ❤ by Junnatun</p>
+                        Made with ❤ by 
+                        <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
                     </div>
                 </div>
             </footer>
@@ -224,9 +279,6 @@ $siswakelas = $result['siswa'];
     </div>
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
-
-    <script src="../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
-    <script src="../assets/js/pages/simple-datatables.js"></script>
 
 </body>
 

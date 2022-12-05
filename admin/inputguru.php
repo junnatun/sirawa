@@ -230,12 +230,13 @@ if (isset($_POST['addData'])){
                 
             </div>
             <footer>
-                    <div class="footer clearfix mb-0 text-muted  bottom-0">
-                        <div class="float-start">
-                            <p>Made with ❤ by Junnatun</p>
-                        </div>
+                <div class="footer clearfix mb-0 text-muted  bottom-0">
+                    <div class="float-start">
+                        Made with ❤ by 
+                        <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
                     </div>
-                </footer>
+                </div>
+            </footer>
         </div>
         <script src="../assets/js/bootstrap.js"></script>
         <script src="../assets/js/app.js"></script>

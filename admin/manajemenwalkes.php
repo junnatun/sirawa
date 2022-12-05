@@ -6,6 +6,23 @@ error_reporting(0);
 
 session_start();
 
+//Inisialisasi nilai POST untuk sorting
+if ($_POST['sort_by'] == '') {
+    $sortBy = 'id_wali';
+    $sortType = 'ASC';
+    $_POST['sort_by'] = $sortBy;
+    $_POST['sort_type'] = $sortType;
+}
+
+//Inisialisasi nilai POST untuk searching
+if ($_POST['search_value'] == '') {
+    $searchValue = '';
+    $placeHolder = 'Cari..';
+} else {
+    $searchValue = $_POST['search_value'];
+    $placeHolder = '';
+}
+
 //DELETE DATA
 if(isset($_POST['delData'])) {
     $id_user = $_POST['id_user'];
@@ -157,15 +174,42 @@ if (isset($_POST['editData'])) {
                             <div class="row">
                                 <div class="col-md-9 h4">Data Wali Kelas</div>
                                 <a href="inputwalkes.php" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="plus"></i>Tambah Wali Kelas</a>
-
                             </div>
+                            <div class="row g-2 d-flex justify-content-between mt-3">
+                                <div class="col-md-6">
+                                    <form method="POST">
+                                        <div class="input-group">
+                                            <select class="form-select" id="" aria-label="Example select with button addon" name="sort_by">
+                                                <option selected value="<?= $_POST['sort_by'] ?>"><?= strtoupper(preg_replace("/_/", " ",  $_POST['sort_by'])) ?></option>
+                                                <option value="id_wali">ID Wali</option>
+                                                <option value="nama">Nama Guru</option>
+                                                <option value="kelas">Kelas Wali</option>
+                                            </select>
+                                            <select class="form-select" id="inputGroupSelect04" name="sort_type">
+                                                <option selected value="<?= $_POST['sort_type'] ?>"><?= $_POST['sort_type'] ?>ENDING</option>
+                                                <option value="ASC">Ascending</option>
+                                                <option value="DESC">Descending</option>
+                                            </select>
+                                            <button class="btn btn-primary" type="submit" name="submitSort">Sort</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <form method="POST">
+                                        <div class="input-group">
+                                            <input type="text" name="search_value" class="form-control" placeholder="<?= $placeHolder ?>" value="<?= $searchValue ?>" aria-describedby="button-addon2" />
+                                            <button class="btn btn-primary" type="submit" id="button-addon2" name="submitSearch">Search</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>     
                         </div>
 
                         <div class="card-body">
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
-                                        <th>ID wali</th>
+                                        <th>ID Wali</th>
                                         <th>Nama Guru</th>
                                         <th>Kelas Wali</th>
                                     </tr>
@@ -174,12 +218,24 @@ if (isset($_POST['editData'])) {
                                 <!--data-->
                                 <tbody>
                                 <?php
-                                        $pullData=mysqli_query($conn, "SELECT w.id_wali, w.id_user, g.nama, k.kelas FROM tb_walikelas w JOIN tb_guru g USING(id_guru) JOIN tb_kelas k USING(id_kelas);");
-                                        while($data=mysqli_fetch_array($pullData)){
-                                            $id_user=$data['id_user'];
-                                            $id_wali=$data['id_wali'];
-                                            $nama =$data['nama'];
-                                            $kelas = $data['kelas'];
+                                    if (isset($_POST['submitSort'])) {
+                                        $sortBy = $_POST['sort_by'];
+                                        $sortType = $_POST['sort_type'];
+                                        header('refresh:0; url=manajemenwalkes.php');
+                                    }
+                
+                                    if (isset($_POST['submitSearch'])) {
+                                        $searchValue = $_POST['search_value'];
+                                        header('refresh:0; url=manajemenwalkes.php');
+                                    }
+                                    $pullData=mysqli_query($conn, "SELECT w.id_wali, w.id_user, g.nama, k.kelas FROM tb_walikelas w JOIN tb_guru g USING(id_guru) 
+                                    JOIN tb_kelas k USING(id_kelas) WHERE w.id_wali LIKE '%$searchValue%' OR g.nama LIKE '%$searchValue%' OR k.kelas LIKE '%$searchValue%'
+                                    ORDER BY $sortBy $sortType");
+                                    while($data=mysqli_fetch_array($pullData)){
+                                        $id_user=$data['id_user'];
+                                        $id_wali=$data['id_wali'];
+                                        $nama =$data['nama'];
+                                        $kelas = $data['kelas'];
                                     ?> <tr>
                                         <td><?=$id_wali?></td>
                                         <td><?=$nama?></td>
@@ -260,7 +316,8 @@ if (isset($_POST['editData'])) {
             <footer>
                 <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
                     <div class="float-start">
-                        <p>Made with ❤ by Junnatun</p>
+                        Made with ❤ by 
+                        <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
                     </div>
                 </div>
             </footer>
@@ -268,9 +325,6 @@ if (isset($_POST['editData'])) {
     </div>
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
-
-    <script src="../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
-    <script src="../assets/js/pages/simple-datatables.js"></script>
 
 </body>
 

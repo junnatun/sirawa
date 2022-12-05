@@ -207,7 +207,8 @@ $row = mysqli_fetch_assoc($data);
             <footer>
                 <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
-                        <p>Made with ❤ by Junnatun</p>
+                        Made with ❤ by 
+                        <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
                     </div>
                 </div>
             </footer>

@@ -12,6 +12,24 @@ if($_SESSION['role']=""){
     exit();
 }
 
+//Inisialisasi nilai POST untuk sorting
+if ($_POST['sort_by'] == '') {
+    $sortBy = 'id_user';
+    $sortType = 'ASC';
+    $_POST['sort_by'] = $sortBy;
+    $_POST['sort_type'] = $sortType;
+}
+
+//Inisialisasi nilai POST untuk searching
+if ($_POST['search_value'] == '') {
+    $searchValue = '';
+    $placeHolder = 'Cari..';
+} else {
+    $searchValue = $_POST['search_value'];
+    $placeHolder = '';
+}
+
+
 //GET TOTAL SISWA
 $totalSiswa = getTotal($conn, 'tb_siswa', 'id_siswa');
 
@@ -249,7 +267,37 @@ if (isset($_POST['editData'])) {
                     <section class="section">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="col-md-9 h4">Data Pengguna</div>
+                                    <div class="row">
+                                        <div class="col-md-9 h4">Data Pengguna</div>
+                                    </div>
+                                    <div class="row g-2 d-flex justify-content-between">
+                                        <div class="col-md-6">
+                                            <form method="POST">
+                                                <div class="input-group">
+                                                    <select class="form-select" id="" aria-label="Example select with button addon" name="sort_by">
+                                                        <option selected value="<?= $_POST['sort_by'] ?>"><?= strtoupper(preg_replace("/_/", " ",  $_POST['sort_by'])) ?></option>
+                                                        <option value="id_user">ID User</option>
+                                                        <option value="username">Username</option>
+                                                        <option value="role">Role</option>
+                                                    </select>
+                                                    <select class="form-select" id="inputGroupSelect04" name="sort_type">
+                                                        <option selected value="<?= $_POST['sort_type'] ?>"><?= $_POST['sort_type'] ?>ENDING</option>
+                                                        <option value="ASC">Ascending</option>
+                                                        <option value="DESC">Descending</option>
+                                                    </select>
+                                                    <button class="btn btn-primary" type="submit" name="submitSort">Sort</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <form method="POST">
+                                                <div class="input-group">
+                                                    <input type="text" name="search_value" class="form-control" placeholder="<?= $placeHolder ?>" value="<?= $searchValue ?>" aria-describedby="button-addon2" />
+                                                    <button class="btn btn-primary" type="submit" id="button-addon2" name="submitSearch">Search</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>                                    
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-striped" id="table1">
@@ -263,7 +311,19 @@ if (isset($_POST['editData'])) {
                                         <!--data-->
                                         <tbody>
                                             <?php
-                                                $pullData=mysqli_query($conn, "SELECT * FROM tb_user");
+                                                if (isset($_POST['submitSort'])) {
+                                                    $sortBy = $_POST['sort_by'];
+                                                    $sortType = $_POST['sort_type'];
+                                                    header('refresh:0; url=index.php');
+                                                }
+                            
+                                                if (isset($_POST['submitSearch'])) {
+                                                    $searchValue = $_POST['search_value'];
+                                                    header('refresh:0; url=index.php');
+                                                }
+
+                                                $pullData=mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user LIKE '%$searchValue%' 
+                                                OR username LIKE '%$searchValue%' OR role LIKE '%$searchValue%' ORDER BY $sortBy $sortType");
                                                 while($data=mysqli_fetch_array($pullData)){
                                                     $id_user = $data['id_user'];
                                                     $username =$data['username'];
@@ -359,7 +419,8 @@ if (isset($_POST['editData'])) {
             <footer>
                 <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
-                        <p>Made with ❤ by Junnatun</p>
+                        Made with ❤ by 
+                        <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
                     </div>
                 </div>
             </footer>

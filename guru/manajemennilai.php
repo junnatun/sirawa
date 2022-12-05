@@ -11,6 +11,22 @@ $ambildata = mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_mapel USING(id_g
 $result = mysqli_fetch_assoc($ambildata);
 $id_mapel = $result['id_mapel'];
 
+//Inisialisasi nilai POST untuk sorting
+if ($_POST['sort_by'] == '') {
+    $sortBy = 'id_siswa';
+    $sortType = 'ASC';
+    $_POST['sort_by'] = $sortBy;
+    $_POST['sort_type'] = $sortType;
+}
+
+//Inisialisasi nilai POST untuk searching
+if ($_POST['search_value'] == '') {
+    $searchValue = '';
+    $placeHolder = 'Cari..';
+} else {
+    $searchValue = $_POST['search_value'];
+    $placeHolder = '';
+}
 
 //GET KELAS YANG DIAMPU
 $id_guru=$result['id_guru'];
@@ -218,15 +234,27 @@ if(isset($_POST['delData'])){
                         <div class="card">
                             <div class="card-body px-4 py-4-5">
                                 <div class="row">
-                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                    <div class="col-md-4">
                                         <div class="stats-icon green mb-2">
                                             <i class="iconly-boldCalendar"></i>
                                         </div>
                                     </div>
-                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0"><?= $id_kelas?></h6>
+                                    <div class="col-md-6 mt-2">
+                                        <h4 class="text-muted font-semibold">Semester</h4>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10 mt-2 ">
+                                    <form method="POST">
+                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio" class="btn-check" name="semester" id="gasal" autocomplete="off" checked="" value='1'>
+                                        <label class="btn btn-outline-primary" for="gasal">Gasal</label>
+                                        <input type="radio" class="btn-check" name="semester" id="genap" autocomplete="off" value='2'>
+                                        <label class="btn btn-outline-primary" for="genap">Genap</label>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -239,11 +267,36 @@ if(isset($_POST['delData'])){
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-9 h4">Data Nilai Siswa</div>
-                                <!-- <a href="#inputModal" data-bs-toggle="modal" data-bs-target="#inputModal" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="upload"></i>Input Nilai</a> -->
                                 <a href="#getDataModal" data-bs-toggle="modal" data-bs-target="#getDataModal" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="download"></i>Ambil Data Siswa</a>
                             </div>
-
-                            
+                            <div class="row g-2 d-flex justify-content-between mt-3">
+                                <div class="col-md-6">
+                                    <form method="POST">
+                                        <div class="input-group">
+                                            <select class="form-select" id="" aria-label="Example select with button addon" name="sort_by">
+                                                <option selected value="<?= $_POST['sort_by'] ?>"><?= strtoupper(preg_replace("/_/", " ",  $_POST['sort_by'])) ?></option>
+                                                <option value="id_siswa">ID Siswa</option>
+                                                <option value="nama">Nama</option>
+                                                <option value="kelas">Kelas</option>
+                                            </select>
+                                            <select class="form-select" id="inputGroupSelect04" name="sort_type">
+                                                <option selected value="<?= $_POST['sort_type'] ?>"><?= $_POST['sort_type'] ?>ENDING</option>
+                                                <option value="ASC">Ascending</option>
+                                                <option value="DESC">Descending</option>
+                                            </select>
+                                            <button class="btn btn-primary" type="submit" name="submitSort">Sort</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <form method="POST">
+                                        <div class="input-group">
+                                            <input type="text" name="search_value" class="form-control" placeholder="<?= $placeHolder ?>" value="<?= $searchValue ?>" aria-describedby="button-addon2" />
+                                            <button class="btn btn-primary" type="submit" id="button-addon2" name="submitSearch">Search</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>                            
                         </div>
 
                         <div class="card-body">
@@ -264,8 +317,30 @@ if(isset($_POST['delData'])){
 
                                 <!--data-->
                                 <tbody>
-                                <?php
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) JOIN tb_kelas USING(id_kelas) WHERE id_mapel='$id_mapel'");
+                                    <?php
+                                        if (isset($_POST['gasal'])){
+                                            $semester = $_POST['semester'];
+                                            header('refresh:0; url=manajemennilai.php'); 
+                                        }
+                                        if (isset($_POST['genap'])){
+                                            $semester = $_POST['semester'];
+                                            header('refresh:0; url=manajemennilai.php'); 
+                                        }
+
+                                        if (isset($_POST['submitSort'])) {
+                                            $sortBy = $_POST['sort_by'];
+                                            $sortType = $_POST['sort_type'];
+                                            header('refresh:0; url=manajemennilai.php');
+                                        }
+                    
+                                        if (isset($_POST['submitSearch'])) {
+                                            $searchValue = $_POST['search_value'];
+                                            header('refresh:0; url=manajemennilai.php');
+                                        }
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) JOIN tb_kelas USING(id_kelas) 
+                                        WHERE id_mapel='$id_mapel'AND semester='$semester' HAVING id_siswa LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' OR kelas LIKE '%$searchValue%' 
+                                        OR nilai_ph1 LIKE '%$searchValue%' OR nilai_ph2 LIKE '%$searchValue%' OR nilai_ph3 LIKE '%$searchValue%' OR nilai_ph4 LIKE '%$searchValue%' 
+                                        OR nilai_pts LIKE '%$searchValue%' OR nilai_pas LIKE '%$searchValue%' ORDER BY $sortBy $sortType");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_siswa =$data['id_siswa'];
                                             $nama =$data['nama'];
@@ -399,7 +474,8 @@ if(isset($_POST['delData'])){
             <footer>
                 <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
-                        <p>Made with ❤ by Junnatun</p>
+                        Made with ❤ by 
+                        <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
                     </div>
                 </div>
             </footer>
@@ -439,9 +515,6 @@ if(isset($_POST['delData'])){
 
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
-
-    <script src="../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
-    <script src="../assets/js/pages/simple-datatables.js"></script>
 
 </body>
 
