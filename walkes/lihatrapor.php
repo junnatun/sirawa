@@ -5,6 +5,10 @@ include '../config.php';
 error_reporting(0);
 
 session_start();
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 //Inisialisasi nilai POST untuk sorting
 if ($_POST['sort_by'] == '') {
@@ -33,7 +37,6 @@ $id_kelas = $row['id_kelas'];
 $sql = mysqli_query($conn, "SELECT COUNT(id_kelas) AS siswa FROM tb_siswa WHERE id_kelas = '$id_kelas'");
 $result= mysqli_fetch_assoc($sql);
 $siswakelas = $result['siswa'];
-
 
 ?>
 

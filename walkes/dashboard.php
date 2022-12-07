@@ -5,6 +5,10 @@ include '../config.php';
 error_reporting(0);
 
 session_start();
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 //Inisialisasi nilai POST untuk sorting
 if ($_POST['sort_by'] == '') {

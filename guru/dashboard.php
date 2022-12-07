@@ -5,8 +5,10 @@ include '../config.php';
 error_reporting(0);
 
 session_start();
-
-//SELECT COUNT(id_kelas) FROM tb_mapel WHERE id_guru = $id_guru;
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 $id_user = $_SESSION['id_user'];
 $data = mysqli_query($conn, "SELECT nama FROM tb_guru WHERE id_user = '$id_user'");

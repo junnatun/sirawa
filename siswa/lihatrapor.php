@@ -5,6 +5,10 @@ include '../config.php';
 error_reporting(0);
 
 session_start();
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 $id_user = $_SESSION['id_user'];
 $data = mysqli_query($conn, "SELECT id_siswa, nama, nisn, kelas FROM tb_siswa s JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");

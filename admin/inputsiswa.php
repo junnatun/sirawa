@@ -6,6 +6,10 @@ include '../functions/functions.php';
 error_reporting(0);
 
 session_start();
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 //GET ID USER
 $id_user = getIdUser($conn);

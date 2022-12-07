@@ -5,6 +5,10 @@ include '../config.php';
 error_reporting(0);
 
 session_start();
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 $id_user = $_SESSION['id_user'];
 $ambildata = mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_mapel USING(id_guru) WHERE id_user = '$id_user'");

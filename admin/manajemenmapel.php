@@ -6,6 +6,10 @@ include '../functions/functions.php';
 error_reporting(0);
 
 session_start();
+if(!isset($_SESSION['username'])){
+    header("Location:../index.php");
+    exit();
+}
 
 //Inisialisasi nilai POST untuk sorting
 if ($_POST['sort_by'] == '') {
@@ -281,7 +285,6 @@ if (isset($_POST['editData'])) {
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
                                             <input type="hidden" name="id_mapel" value="<?= $id_mapel; ?>">
-                                            <!-- <input type="hidden" name="id_kelas" value="<?= $id_kelas; ?>"> -->
                                         <div class="modal-content">
                                             <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel3">Edit Data Mata Pelajaran</h5>
@@ -351,7 +354,7 @@ if (isset($_POST['editData'])) {
                                     </div>
 
                                     <!-- Modal Hapus -->
-                                    <div class="modal fade" id="hapusModal<?= $id_mapel, $id_kelas; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+                                    <div class="modal fade" id="hapusModal<?= $id_mapel, $id_kelas; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -361,7 +364,7 @@ if (isset($_POST['editData'])) {
                                                 <form method="POST">
                                                     <div class="modal-body">
                                                         <input type="hidden" name="id_mapel" value="<?= $id_mapel ?>">
-                                                        <input type="text" name="id_kelas" value="<?= $id_kelas ?>">
+                                                        <input type="hidden" name="id_kelas" value="<?= $id_kelas ?>">
                                                         <p>Yakin hapus mapel <b><?= $mapel; ?></b><br> dengan ID <b><?= $id_mapel ?></b> di kelas <b><?=$kelas?></b> ?</p>
                                                     </div>
                                                     <div class="modal-footer">
