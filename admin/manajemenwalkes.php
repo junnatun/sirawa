@@ -1,6 +1,7 @@
 <?php
 
 include '../config.php';
+include '../functions/functions.php';
 
 error_reporting(0);
 
@@ -23,20 +24,55 @@ if ($_POST['search_value'] == '') {
     $placeHolder = '';
 }
 
+//ADD DATA
+if (isset($_POST['addData'])){
+    $id_user = getIdUser($conn);
+    $id_guru = $_POST['id_guru'];
+    $kelas = $_POST['kelas'];
+    $id_walikelas = "WK$kelas";
+
+    $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
+    $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
+    $id_kelas = $data_id_kelas['id_kelas'];
+    
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$kelas','wali kelas')");
+    if($addUser){
+        $addWali = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', '$id_kelas', '$id_guru')");
+        if($addWali){
+            header('refresh:0; url=manajemenwalkes.php');
+            echo "<script>alert('Berhasil menambah data!')</script>";
+        }else{
+            echo "<script>alert('Data gagal ditambahkan!')</script>";
+            mysqli_query($conn,"DELETE FROM tb_user WHERE id_user = '$id_user'" );
+        }
+    }else{
+        echo "<script>alert('Data gagal ditambahkan!')</script>";
+    }
+}
+
+
 //DELETE DATA
 if(isset($_POST['delData'])) {
     $id_user = $_POST['id_user'];
-    mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+    $delWali=mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+    if ($delWali) {
+        header('refresh:0; url=manajemenwalkes.php');
+        echo "<script>alert('Berhasil menghapus data wali kelas!')</script>";
+    } else {
+        echo "<script>alert('Hapus data wali kelas gagal!')</script>";
+    }
 }
 
 //EDIT DATA
 if (isset($_POST['editData'])) {
     $id_user = $_POST['id_user'];
 
-    $nama = $_POST['nama'];
-    $fetch_id_guru = mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama='$nama'");
-    $data_id_guru = mysqli_fetch_array($fetch_id_guru);
-    $id_guru = $data_id_guru['id_guru'];
+    // $nama = $_POST['nama'];
+    // $fetch_id_guru = mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama='$nama'");
+    // $data_id_guru = mysqli_fetch_array($fetch_id_guru);
+    // $id_guru = $data_id_guru['id_guru'];
+
+    $id_guru = $_POST['id_guru'];
 
     $kelas = $_POST['kelas'];
     $id_kelas = "K$kelas";
@@ -80,7 +116,7 @@ if (isset($_POST['editData'])) {
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="dashboard.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -99,7 +135,7 @@ if (isset($_POST['editData'])) {
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item">
-                            <a href="index.php" class='sidebar-link'>
+                            <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -159,7 +195,7 @@ if (isset($_POST['editData'])) {
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Manajemen Wali Kelas</li>
                                 </ol>
                             </nav>
@@ -173,7 +209,7 @@ if (isset($_POST['editData'])) {
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-9 h4">Data Wali Kelas</div>
-                                <a href="inputwalkes.php" class="col-md-3 btn icon icon-left btn-primary rounded-pill"><i data-feather="plus"></i>Tambah Wali Kelas</a>
+                                <a href="#tambahModal" class="col-md-3 btn icon icon-left btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#tambahModal"><i data-feather="plus"></i>Tambah Wali Kelas</a>
                             </div>
                             <div class="row g-2 d-flex justify-content-between mt-3">
                                 <div class="col-md-6">
@@ -255,32 +291,51 @@ if (isset($_POST['editData'])) {
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
                                             <input type="hidden" name="id_user" value="<?= $id_user; ?>">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel3">Edit Data Wali Kelas</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col mb-3">
-                                                <label for="nameLarge" class="form-label">Nama</label>
-                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel3">Edit Data Wali Kelas</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col mb-3">
+                                                    <label for="nameLarge" class="form-label">ID Wali Kelas</label>
+                                                    <p class="ms-2"><?=$id_wali?></p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col mb-3">
+                                                    <label for="nameLarge" class="form-label">Nama</label>
+                                                    <select class="form-select" name="id_guru" aria-label="Default select example">
+                                                        <option selected value="<?= $id_wali?>"><?=$nama?></option>
+                                                        <?php
+                                                            $ambil_data_guru = mysqli_query($conn,"SELECT id_guru, nama FROM tb_guru ORDER BY nama");
+
+                                                            while ($data = mysqli_fetch_array($ambil_data_guru)) {
+                                                                $id_guru = $data['id_guru'];
+                                                                $nama = $data['nama'];
+                                                            ?>
+                                                                <option value="<?= $id_guru ?>"><?= $nama ?></option>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col mb-3">
+                                                    <label for="nameLarge" class="form-label">Kelas Wali</label>
+                                                    <p class="ms-2"><?=$kelas?></p>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                    Batal
+                                                </button>
+                                                <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col mb-3">
-                                                <label for="nameLarge" class="form-label">Kelas Wali</label>
-                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
-                                                </div>
-                                            </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                                Batal
-                                            </button>
-                                            <button type="submit" name="editData" class="btn btn-primary">Simpan Perubahan</button>
-                                            </div>
-                                        </div>
                                         </form>
                                     </div>
                                     </div>
@@ -296,7 +351,7 @@ if (isset($_POST['editData'])) {
                                                 <form method="POST">
                                                     <div class="modal-body">
                                                         <input type="hidden" name="id_user" value="<?= $id_user ?>">
-                                                            <p>Yakin hapus wali kelas <b><?= $nama; ?></b> dengan ID <b><?= $id_user ?>?</b></p>
+                                                            <p>Yakin hapus wali kelas <b><?= $kelas; ?></b> dengan guru <b><?= $nama ?>?</b></p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
@@ -323,6 +378,65 @@ if (isset($_POST['editData'])) {
             </footer>
         </div>
     </div>
+
+    <!-- Modal Tambah -->
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <form method="POST">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel3">Tambah Wali Kelas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameLarge" class="form-label">Nama Guru</label>
+                            <select class="form-select" name="id_guru" aria-label="Default select example">
+                            <?php
+                                $ambil_data_guru = mysqli_query($conn,"SELECT id_guru, nama FROM tb_guru ORDER BY nama");
+
+                                while ($data = mysqli_fetch_array($ambil_data_guru)) {
+                                    $id_guru = $data['id_guru'];
+                                    $nama = $data['nama'];
+                                ?>
+                                    <option value="<?= $id_guru ?>"><?= $nama ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="col mb-3">
+                        <label for="nameLarge" class="form-label">Kelas Wali</label>
+                        <select class="form-select" name="kelas" aria-label="Default select example">
+                            <?php
+                                $ambil_data_kelas = mysqli_query($conn,"SELECT id_kelas, kelas FROM tb_kelas ORDER BY kelas");
+
+                                while ($data = mysqli_fetch_array($ambil_data_kelas)) {
+                                    $id_kelas = $data['id_kelas'];
+                                    $kelas = $data['kelas'];
+                                ?>
+                                    <option value="<?= $kelas ?>"><?= $kelas ?></option>
+                                <?php
+                                }
+                                ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" name="addData" class="btn btn-primary">Simpan Data</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
 

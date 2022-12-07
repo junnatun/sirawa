@@ -18,13 +18,13 @@ if (isset($_POST['login'])){
         $_SESSION['username']=$row['username'];
         $_SESSION['role']=$row['role'];
         if ($_SESSION['role'] == "admin"){
-            header("Location: admin/index.php");
+            header("Location: admin/dashboard.php");
         }else if ($_SESSION['role'] == "guru"){
-            header("Location: guru/index.php");
+            header("Location: guru/dashboard.php");
         }else if ($_SESSION['role'] == "wali kelas"){
-            header("Location: walkes/index.php");
+            header("Location: walkes/dashboard.php");
         } else if ($_SESSION['role'] == "siswa"){
-            header("Location: siswa/index.php");
+            header("Location: siswa/dashboard.php");
         }
     } else {
         echo "<script>alert('Username atau password Anda salah. Silahkan coba lagi!')</script>";

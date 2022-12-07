@@ -6,33 +6,12 @@ error_reporting(0);
 
 session_start();
 
-//SELECT COUNT(id_kelas) FROM tb_mapel WHERE id_guru = $id_guru;
-
 $id_user = $_SESSION['id_user'];
-$data = mysqli_query($conn, "SELECT nama FROM tb_guru WHERE id_user = '$id_user'");
-$result = mysqli_fetch_assoc($data);
+$data = mysqli_query($conn, "SELECT * FROM tb_siswa s JOIN tb_ortu USING(id_siswa) JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
+$row = mysqli_fetch_assoc($data);
 
-$id_user = $_SESSION['id_user'];
-$ambildata = mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_mapel USING(id_guru) WHERE id_user = '$id_user'");
-$result = mysqli_fetch_assoc($ambildata);
-$id_mapel = $result['id_mapel'];
-
-//GET SISWA YANG DIAMPU
-$id_kelas = $result['id_kelas'];
-$sql= mysqli_query($conn, "SELECT COUNT(id_siswa) AS siswa FROM tb_nilai WHERE id_mapel='$id_mapel'");
-$row = mysqli_fetch_assoc($sql);
-$jumlahSiswa=$row['siswa'];
-
-//HITUNG INPUT NILAI
-$sql2 = mysqli_query($conn, "SELECT COUNT(id_siswa) AS hitung FROM (SELECT * FROM tb_nilai WHERE id_mapel='$id_mapel') AS allData 
-        WHERE nilai_ph1<>0 AND nilai_ph2<>0 AND nilai_ph3<>0 AND nilai_ph4<>0 AND nilai_pts<>0 AND nilai_pas<>0");
-$row2 = mysqli_fetch_assoc($sql2);
-$sudahInput=$row2['hitung'];
-
-
-//PROGRES
-$progres = ($sudahInput/$jumlahSiswa)*100;
 ?>
+
 
 
 
@@ -42,7 +21,7 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Guru</title>
+    <title>Dashboard - Siswa</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
@@ -60,7 +39,7 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="dashboard.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -80,19 +59,19 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item active ">
-                            <a href="index.php" class='sidebar-link'>
+                            <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="manajemennilai.php" class='sidebar-link'>
-                                <i class="bi bi-table"></i>
-                                <span>Manajemen Nilai Siswa</span>
+                            <a href="lihatrapor.php" class='sidebar-link'>
+                                <i class="bi bi-award-fill"></i>
+                                <span>Lihat Rapor</span>
                             </a>
                         </li>
                     </ul>
-                    <ul class="menu  position-absolute bottom-0">
+                    <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">
                             <a href="../logout.php" class='sidebar-link'>
                                 <i class="bi bi-power"></i>
@@ -104,8 +83,8 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
                 <!--/menu-->
             </div>
         </div>
+        
         <div id="main">
-
             <div class="page-heading">
                 <h3>Dashboard</h3>
             </div>
@@ -117,8 +96,8 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <h3>Halo, <?=$result['nama'];?>! 👋</h3>
-                                        <p class="text-subtitle text-muted">Mulai olah nilai siswa dengan Sirawa.</p>
+                                        <h3>Halo, <?=$row['nama'];?>! 👋 </h3>
+                                        <p class="text-subtitle text-muted">Lihat hasil kompetensi belajarmu di Sirawa.</p>
                                     </div>
                                     <div class="col-md-4">
                                         <img src="../assets/images/pic-dash3.png" height="180">
@@ -126,62 +105,87 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
-                            <div class="col-6 col-lg-4 col-md-6">
+                            <div class="col-12">
                                 <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon purple mb-2">
-                                                    <i class="iconly-boldUser1"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Siswa yang Diampu</h6>
-                                                <h6 class="font-extrabold mb-0"><?= $jumlahSiswa ?></h6>
-                                            </div>
-                                        </div>
+                                    <div class="card-header">
+                                        <h4>Data Siswa</h4>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="col-6 col-lg-4 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon blue mb-2">
-                                                    <i class="iconly-boldUpload"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Sudah Input Nilai</h6>
-                                                <h6 class="font-extrabold mb-0"><?= $sudahInput?></h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-6 col-lg-4 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon green mb-2">
-                                                    <i class="iconly-boldActivity"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Progres</h6>
-                                                <h6 class="font-extrabold mb-0"><?= $progres?>%</h6>
-                                            </div>
-                                        </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped" id="table1">
+                                            <!--data-->
+                                            <tbody>
+                                            <tr>
+                                                <th>ID Siswa</th>
+                                                <td><?=$row['id_siswa'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nama</th>
+                                                <td><?=$row['nama'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>NISN</th>
+                                                <td><?=$row['nisn'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tempat, Tanggal Lahir</th>
+                                                <td><?=$row['tempat_lahir'];?> , <?=$row['tgl_lahir'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Jenis Kelamin</th>
+                                                <td><?=$row['jenis_kelamin'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Agama</th>
+                                                <td><?=$row['agama'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nomor Telepon</th>
+                                                <td><?=$row['no_telp'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Kelas</th>
+                                                <td><?=$row['kelas'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nama Ayah</th>
+                                                <td><?=$row['nama_ayah'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Pekerjaan Ayah</th>
+                                                <td><?=$row['profesi_ayah'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Alamat Ayah</th>
+                                                <td><?=$row['alamat_ayah'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nomor Telepon Ayah</th>
+                                                <td><?=$row['no_telp_ayah'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nama Ibu</th>
+                                                <td><?=$row['nama_ibu'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Pekerjaan Ibu</th>
+                                                <td><?=$row['profesi_ibu'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Alamat Ibu</th>
+                                                <td><?=$row['alamat_ibu'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nomor Telepon Ibu</th>
+                                                <td><?=$row['no_telp_ibu'];?></td>
+                                            </tr>
+                                            <!--/data-->
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="col-12 col-lg-3">
                         <div class="card">
@@ -201,7 +205,7 @@ $progres = ($sudahInput/$jumlahSiswa)*100;
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted  bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         Made with ❤ by 
                         <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>

@@ -26,30 +26,25 @@ if ($_POST['search_value'] == '') {
 
 //ADD DATA
 if (isset($_POST['addData'])){
-    $id_mapel = getIdMapel($conn); 
+    $id_mapel = $_POST['id_mapel'];
     $mapel=$_POST['mapel'];
-
-    $nama_guru = $_POST['nama_guru'];
-    $fetch_id_guru = mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama='$nama_guru'");
-    $data_id_guru = mysqli_fetch_array($fetch_id_guru);
-    $id_guru = $data_id_guru['id_guru'];
-
-    $kelas = $_POST['kelas'];
-    $id_kelas = "K$kelas";
+    $id_guru = $_POST['id_guru'];
+    $id_kelas=$_POST['id_kelas'];
 
     $addMapel = mysqli_query($conn, "INSERT INTO tb_mapel VALUES ('$id_mapel','$id_guru','$mapel','$id_kelas')");
     if($addMapel){
         header('refresh:0; url=manajemenmapel.php');
-        echo "<script>alert('Berhasil menambah data!')</script>";
+        echo "<script>alert('Berhasil menambah mata pelajaran!')</script>";
     }else {
-            echo "<script>alert('Data gagal ditambahkan!')</script>";
+            echo "<script>alert('Mata pelajaran gagal ditambahkan!')</script>";
     }
 }
 
 //DELETE DATA
 if(isset($_POST['delData'])) {
     $id_mapel = $_POST['id_mapel'];
-    $delMapel=mysqli_query($conn, "DELETE FROM tb_mapel WHERE id_mapel='$id_mapel'");
+    $id_kelas = $_POST['id_kelas'];
+    $delMapel=mysqli_query($conn, "DELETE FROM tb_mapel WHERE id_mapel='$id_mapel' AND id_kelas = '$id_kelas'");
     if ($delMapel) {
         header('refresh:0; url=manajemenmapel.php');
         echo "<script>alert('Berhasil menghapus mata pelajaran!')</script>";
@@ -61,18 +56,10 @@ if(isset($_POST['delData'])) {
 //EDIT DATA
 if (isset($_POST['editData'])) {
     $id_mapel = $_POST['id_mapel'];
-    
-    $nama_guru = $_POST['nama_guru'];
-    $fetch_id_guru = mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama='$nama_guru'");
-    $data_id_guru = mysqli_fetch_array($fetch_id_guru);
-    $id_guru = $data_id_guru['id_guru'];
-    
+    $id_guru= $_POST['id_guru'];
     $mapel = $_POST['mapel'];
-    $kelas = $_POST['kelas'];
-    $id_kelas = "K$kelas";
+    $id_kelas = $_POST['id_kelas'];
 
-
-    
     $editQuery = "UPDATE tb_mapel SET mapel='$mapel', id_guru='$id_guru', id_kelas='$id_kelas' WHERE id_mapel='$id_mapel'";
     $edit = mysqli_query($conn, $editQuery);
     if ($edit) {
@@ -110,7 +97,7 @@ if (isset($_POST['editData'])) {
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="dashboard.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -129,7 +116,7 @@ if (isset($_POST['editData'])) {
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item">
-                            <a href="index.php" class='sidebar-link'>
+                            <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -189,7 +176,7 @@ if (isset($_POST['editData'])) {
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Manajemen Mapel</li>
                                 </ol>
                             </nav>
@@ -265,11 +252,14 @@ if (isset($_POST['editData'])) {
                                         $pullData=mysqli_query($conn, "SELECT * FROM tb_mapel JOIN tb_guru USING(id_guru) JOIN tb_kelas USING(id_kelas)
                                         WHERE id_mapel LIKE '%$searchValue%' OR mapel LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' OR kelas LIKE '%$searchValue%'
                                         ORDER BY $sortBy $sortType");
+                                        
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_mapel = $data['id_mapel'];
                                             $mapel = $data['mapel'];
+                                            $id_guru = $data['id_guru'];
                                             $nama = $data['nama'];
                                             $kelas= $data['kelas'];
+                                            $id_kelas = $data['id_kelas'];
                                     ?> <tr>
                                         
                                         <td><?=$id_mapel?></td>
@@ -277,26 +267,33 @@ if (isset($_POST['editData'])) {
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
                                         <td>                                        
-                                            <a href="#editModal<?= $id_mapel; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_mapel; ?>" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_mapel, $id_kelas; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_mapel, $id_kelas; ?>" data-bs-placement="bottom" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="#hapusModal <?= $id_mapel; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_mapel; ?>" data-bs-placement="bottom" title="Hapus">
+                                            <a href="#hapusModal<?= $id_mapel, $id_kelas; ?>" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_mapel, $id_kelas; ?>" data-bs-placement="bottom" title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
 
                                     <!-- Modal Edit -->
-                                    <div class="modal fade" id="editModal<?= $id_mapel; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal fade" id="editModal<?= $id_mapel, $id_kelas;?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
                                             <input type="hidden" name="id_mapel" value="<?= $id_mapel; ?>">
+                                            <!-- <input type="hidden" name="id_kelas" value="<?= $id_kelas; ?>"> -->
                                         <div class="modal-content">
                                             <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel3">Edit Data Mata Pelajaran</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">ID Mata Pelajaran</label>
+                                                <p class="ms-2"><?=$id_mapel?></p>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Mata Pelajaran</label>
@@ -306,13 +303,39 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Guru Pengampu</label>
-                                                <input type="text" name="nama_guru" class="form-control" value="<?= $nama ?>" />
+                                                <!-- <input type="text" name="nama_guru" class="form-control" value="<?= $nama ?>" /> -->
+                                                <select class="form-select" name="id_guru" aria-label="Default select example">
+                                                <option selected value="<?= $id_guru?>"><?=$nama?></option>
+                                                <?php
+                                                    $ambil_data_guru = mysqli_query($conn,"SELECT id_guru, nama FROM tb_guru ORDER BY nama");
+                                                    while ($data = mysqli_fetch_array($ambil_data_guru)) {
+                                                        $id_guru = $data['id_guru'];
+                                                        $nama = $data['nama'];
+                                                    ?>
+                                                        <option value="<?= $id_guru ?>"><?= $nama ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Kelas</label>
-                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
+                                                <select class="form-select" name="id_kelas" aria-label="Default select example">
+                                                    <option selected value="<?= $id_kelas?>"><?=$kelas?></option>
+                                                    <?php
+                                                        $ambil_data_kelas = mysqli_query($conn,"SELECT id_kelas, kelas FROM tb_kelas ORDER BY kelas");
+
+                                                        while ($data = mysqli_fetch_array($ambil_data_kelas)) {
+                                                            $id_kelas = $data['id_kelas'];
+                                                            $kelas = $data['kelas'];
+                                                        ?>
+                                                            <option value="<?= $id_kelas ?>"><?= $kelas ?></option>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                             </div>
@@ -328,7 +351,7 @@ if (isset($_POST['editData'])) {
                                     </div>
 
                                     <!-- Modal Hapus -->
-                                    <div class="modal fade" id="hapusModal<?= $id_mapel; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+                                    <div class="modal fade" id="hapusModal<?= $id_mapel, $id_kelas; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -338,7 +361,8 @@ if (isset($_POST['editData'])) {
                                                 <form method="POST">
                                                     <div class="modal-body">
                                                         <input type="hidden" name="id_mapel" value="<?= $id_mapel ?>">
-                                                            <p>Yakin hapus mata pelajaran <b><?= $mapel; ?></b> dengan ID <b><?= $id_mapel ?>?</b></p>
+                                                        <input type="text" name="id_kelas" value="<?= $id_kelas ?>">
+                                                        <p>Yakin hapus mapel <b><?= $mapel; ?></b><br> dengan ID <b><?= $id_mapel ?></b> di kelas <b><?=$kelas?></b> ?</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
@@ -368,7 +392,6 @@ if (isset($_POST['editData'])) {
     </div>
     
     <!-- Modal Tambah -->
-                               
     <div class="modal fade" id="tambahModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <form method="POST">
@@ -380,20 +403,50 @@ if (isset($_POST['editData'])) {
                 <div class="modal-body">
                     <div class="row">
                         <div class="col mb-3">
+                            <label for="nameLarge" class="form-label">ID Mapel</label>
+                            <input type="text" name="id_mapel" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
                             <label for="nameLarge" class="form-label">Mata Pelajaran</label>
-                            <input type="text" name="mapel" class="form-control" placeholder="Contoh : Matematika" />
+                            <input type="text" name="mapel" class="form-control" placeholder="Contoh : Matematika" required />
                         </div>
                     </div>
                 <div class="row">
                     <div class="col mb-3">
                         <label for="nameLarge" class="form-label">Guru Pengampu</label>
-                        <input type="text" name="nama_guru" class="form-control" placeholder="Contoh : Junnatunnisa" />
+                        <select class="form-select" name="id_guru" aria-label="Default select example" required>
+                            <?php
+                                $ambil_data_guru = mysqli_query($conn,"SELECT id_guru, nama FROM tb_guru ORDER BY nama");
+
+                                while ($data = mysqli_fetch_array($ambil_data_guru)) {
+                                    $id_guru = $data['id_guru'];
+                                    $nama = $data['nama'];
+                                ?>
+                                    <option value="<?= $id_guru ?>"><?= $nama ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col mb-3">
                         <label for="nameLarge" class="form-label">Kelas</label>
-                        <input type="text" name="kelas" class="form-control" placeholder="Contoh : 9A" />
+                        <select class="form-select" name="id_kelas" aria-label="Default select example" required>
+                            <?php
+                                $ambil_data_kelas = mysqli_query($conn,"SELECT id_kelas, kelas FROM tb_kelas ORDER BY kelas");
+
+                                while ($data = mysqli_fetch_array($ambil_data_kelas)) {
+                                    $id_kelas = $data['id_kelas'];
+                                    $kelas = $data['kelas'];
+                                ?>
+                                    <option value="<?= $id_kelas ?>"><?= $kelas ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
                     </div>
                 </div>
                 <div class="row">

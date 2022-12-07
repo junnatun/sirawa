@@ -39,7 +39,13 @@ $totkelas = getTotalKelas($conn);
 //DELETE DATA
 if(isset($_POST['delData'])) {
     $id_user = $_POST['id_user'];
-    mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+    $delSiswa= mysqli_query($conn, "DELETE FROM tb_user WHERE id_user='$id_user'");
+    if ($delSiswa) {
+        header('refresh:0; url=manajemensiswa.php');
+        echo "<script>alert('Berhasil menghapus data siswa!')</script>";
+    } else {
+        echo "<script>alert('Hapus data siswa gagal!')</script>";
+    }
 }
 
 //EDIT DATA
@@ -111,7 +117,7 @@ if (isset($_POST['editData'])) {
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="dashboard.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -130,7 +136,7 @@ if (isset($_POST['editData'])) {
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item">
-                            <a href="index.php" class='sidebar-link'>
+                            <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -190,7 +196,7 @@ if (isset($_POST['editData'])) {
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Manajemen Siswa</li>
                                 </ol>
                             </nav>
@@ -435,6 +441,12 @@ if (isset($_POST['editData'])) {
                                             <div class="modal-body">
                                             <div class="row">
                                                 <div class="col mb-3">
+                                                <label for="nameLarge" class="form-label">ID Siswa</label>
+                                                <p class="ms-2"><?=$id_siswa?></p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Nama</label>
                                                 <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
                                                 </div>
@@ -448,7 +460,21 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Kelas</label>
-                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
+                                                <!-- <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" /> -->
+                                                    <select class="form-select" name="id_kelas" aria-label="Default select example">
+                                                        <option selected value="<?= $id_kelas?>"><?=$kelas?></option>
+                                                            <?php
+                                                                $ambil_data_kelas = mysqli_query($conn,"SELECT id_kelas, kelas FROM tb_kelas ORDER BY kelas");
+
+                                                                while ($data = mysqli_fetch_array($ambil_data_kelas)) {
+                                                                    $id_kelas = $data['id_kelas'];
+                                                                    $kelas = $data['kelas'];
+                                                                ?>
+                                                                    <option value="<?= $id_kelas ?>"><?= $kelas ?></option>
+                                                                <?php
+                                                                }
+                                                                ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -488,7 +514,7 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat</label>
-                                                <input class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"></input>
+                                                <textarea class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"><?= $alamat ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -506,7 +532,7 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat Ayah</label>
-                                                <input type="text" name="alamat_ayah" class="form-control" value="<?= $alamat_ayah ?>" >
+                                                <textarea type="text" name="alamat_ayah" class="form-control" value="<?= $alamat_ayah ?>" ><?= $alamat_ayah ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -530,7 +556,7 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat Ibu</label>
-                                                <input type="text" name="alamat_ibu" class="form-control" value="<?= $alamat_ibu ?>" >
+                                                <textarea type="text" name="alamat_ibu" class="form-control" value="<?= $alamat_ibu ?>" ><?= $alamat_ibu ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -562,7 +588,7 @@ if (isset($_POST['editData'])) {
                                                 <form method="POST">
                                                     <div class="modal-body">
                                                         <input type="hidden" name="id_user" value="<?= $id_user ?>">
-                                                            <p>Yakin hapus siswa <b><?= $nama; ?></b> dengan ID <b><?= $id_user ?>?</b></p>
+                                                            <p>Yakin hapus siswa <b><?= $nama; ?></b> dengan ID siswa <b><?= $id_siswa ?>?</b></p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>

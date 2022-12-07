@@ -15,6 +15,10 @@ $nisn = $row['nisn'];
 $kelas = $row['kelas'];
 $id_kelas = "K$kelas";
 
+if ($_POST['semester'] == '') {
+    $semester='1';
+    $_POST['semester']= $semester;
+}
 
 
 ?>
@@ -47,7 +51,7 @@ $id_kelas = "K$kelas";
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="dashboard.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -66,7 +70,7 @@ $id_kelas = "K$kelas";
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item">
-                            <a href="index.php" class='sidebar-link'>
+                            <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -108,7 +112,7 @@ $id_kelas = "K$kelas";
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Lihat Rapor</li>
                                 </ol>
                             </nav>
@@ -134,17 +138,17 @@ $id_kelas = "K$kelas";
                     </div>
                     <div class="col-6 col-lg-4 col-md-6">
                         <div class="card">
-                            <div class="card-body px-4 py-4-5">
+                            <div class="card-body px-3 py-4-5">
                                 <div class="row">
-                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ms-5 ">
                                         <div class="stats-icon purple mb-2">
                                             <i class="iconly-boldCalendar"></i>
                                         </div>
                                     </div>
-                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0">1</h6>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7 ms-5">
+                                        <h5 class="text-muted font-semibold">Semester <?= $_POST['semester'] ?></h5>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -153,7 +157,23 @@ $id_kelas = "K$kelas";
 
                 <section class="section">
                     <div class="card">
-
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-2 mt-2">Pilih semester :</div>
+                                <div class="col-md-2">
+                                <form method="POST">
+                                    <div class="btn-group">
+                                        <input type="submit" class="btn-check" name="semester" id="gasal" autocomplete="off" checked="" value='1'>
+                                        <label class="btn btn-outline-primary" for="gasal">1</label>
+                                        <input type="submit" class="btn-check" name="semester" id="genap" autocomplete="off" value='2'>
+                                        <label class="btn btn-outline-primary" for="genap">2</label>
+                                    </div>
+                                </form>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
@@ -165,33 +185,38 @@ $id_kelas = "K$kelas";
                                             <th>Predikat</th>
                                         </tr>
                                         <?php
-                                        $num =1;
-                                        $totalNilai=0;
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) WHERE id_siswa='$id_siswa' AND id_kelas='$id_kelas'");
-                                        while($data=mysqli_fetch_array($pullData)){
-                                            $id_mapel = $data['id_mapel'];
-                                            $getMapel = mysqli_query($conn, "SELECT * FROM tb_mapel WHERE id_mapel='$id_mapel'");
-                                            $row= mysqli_fetch_array($getMapel);
-                                            $mapel= $row['mapel'];
-
-                                            $ph1 = $data['nilai_ph1'];
-                                            $ph2 = $data['nilai_ph2'];
-                                            $ph3 = $data['nilai_ph3'];
-                                            $ph4 = $data['nilai_ph4'];
-                                            $pts = $data['nilai_pts'];
-                                            $pas = $data['nilai_pas'];
-
-                                            $nilaiRapor = (($ph1+$ph2+$ph3+$ph4+$pts+$pas)/6);
-                                            $totalNilai+=$nilaiRapor;
-                                            if($nilaiRapor <61){
-                                                $predikat = 'D';
-                                            } else if($nilaiRapor <74){
-                                                $predikat = 'C';
-                                            } else if($nilaiRapor <87){
-                                                $predikat = 'B';
-                                            }else if($nilaiRapor >=87){
-                                                $predikat = 'A';
+                                            if (isset($_POST['semester'])) {
+                                                $semester = $_POST['semester'];
+                                                header('refresh:0; url=lihatrapor.php');
                                             }
+
+                                            $num =1;
+                                            $totalNilai=0;
+                                            $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) WHERE id_siswa='$id_siswa' AND id_kelas='$id_kelas' AND semester= '$semester'");
+                                            while($data=mysqli_fetch_array($pullData)){
+                                                $id_mapel = $data['id_mapel'];
+                                                $getMapel = mysqli_query($conn, "SELECT * FROM tb_mapel WHERE id_mapel='$id_mapel'");
+                                                $row= mysqli_fetch_array($getMapel);
+                                                $mapel= $row['mapel'];
+
+                                                $ph1 = $data['nilai_ph1'];
+                                                $ph2 = $data['nilai_ph2'];
+                                                $ph3 = $data['nilai_ph3'];
+                                                $ph4 = $data['nilai_ph4'];
+                                                $pts = $data['nilai_pts'];
+                                                $pas = $data['nilai_pas'];
+
+                                                $nilaiRapor = (($ph1+$ph2+$ph3+$ph4+$pts+$pas)/6);
+                                                $totalNilai+=$nilaiRapor;
+                                                if($nilaiRapor <61){
+                                                    $predikat = 'D';
+                                                } else if($nilaiRapor <74){
+                                                    $predikat = 'C';
+                                                } else if($nilaiRapor <87){
+                                                    $predikat = 'B';
+                                                }else if($nilaiRapor >=87){
+                                                    $predikat = 'A';
+                                                }
                                         ?>
                                         <tr>
                                             <td><?=$num++;?></td>

@@ -8,6 +8,7 @@ session_start();
 
 
 $id_siswa = $_POST['id_siswa'];
+$semester = $_POST['semester'];
 $data = mysqli_query($conn, "SELECT nama, nisn, kelas FROM tb_siswa s JOIN tb_kelas USING(id_kelas) WHERE id_siswa = '$id_siswa'");
 $row = mysqli_fetch_assoc($data);
 $nama = $row['nama'];
@@ -77,7 +78,7 @@ $id_kelas = "K$kelas";
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0">1</h6>
+                                        <h6 class="font-extrabold mb-0"><?= $_POST['semester'] ?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +106,7 @@ $id_kelas = "K$kelas";
                                         <?php
                                         $num =1;
                                         $totalNilai=0;
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) WHERE id_siswa='$id_siswa' AND id_kelas='$id_kelas'");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) WHERE id_siswa='$id_siswa' AND id_kelas='$id_kelas' AND semester='$semester'");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_mapel = $data['id_mapel'];
                                             $getMapel = mysqli_query($conn, "SELECT * FROM tb_mapel WHERE id_mapel='$id_mapel'");

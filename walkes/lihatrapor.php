@@ -10,8 +10,10 @@ session_start();
 if ($_POST['sort_by'] == '') {
     $sortBy = 'id_siswa';
     $sortType = 'ASC';
+    $semester='1';
     $_POST['sort_by'] = $sortBy;
     $_POST['sort_type'] = $sortType;
+    $_POST['semester']= $semester;
 }
 
 //Inisialisasi nilai POST untuk searching
@@ -64,7 +66,7 @@ $siswakelas = $result['siswa'];
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
+                            <a href="dashboard.php"><img src="../assets/images/logo/logo-1.svg" alt="Sirawa"></a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path><g transform="translate(-210 -1)"><path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path><circle cx="220.5" cy="11.5" r="4"></circle><path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path></g></g></svg>
@@ -83,7 +85,7 @@ $siswakelas = $result['siswa'];
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-item">
-                            <a href="index.php" class='sidebar-link'>
+                            <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -119,7 +121,7 @@ $siswakelas = $result['siswa'];
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Lihat Rapor Siswa</li>
                                 </ol>
                             </nav>
@@ -172,7 +174,7 @@ $siswakelas = $result['siswa'];
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0">1</h6>
+                                        <h6 class="font-extrabold mb-0"><?= $_POST['semester'] ?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -195,11 +197,17 @@ $siswakelas = $result['siswa'];
                                                 <option selected value="<?= $_POST['sort_by'] ?>"><?= strtoupper(preg_replace("/_/", " ",  $_POST['sort_by'])) ?></option>
                                                 <option value="id_siswa">ID Siswa</option>
                                                 <option value="nama">Nama</option>
+                                                <option value="kelas">Kelas</option>
                                             </select>
                                             <select class="form-select" id="inputGroupSelect04" name="sort_type">
                                                 <option selected value="<?= $_POST['sort_type'] ?>"><?= $_POST['sort_type'] ?>ENDING</option>
                                                 <option value="ASC">Ascending</option>
                                                 <option value="DESC">Descending</option>
+                                            </select>
+                                            <select class="form-select" id="inputGroupSelect04" name="semester">
+                                                <option selected value="<?= $_POST['semester'] ?>">SEMESTER <?= $_POST['semester'] ?></option>
+                                                <option value="1">Semester 1</option>
+                                                <option value="2">Semester 2</option>
                                             </select>
                                             <button class="btn btn-primary" type="submit" name="submitSort">Sort</button>
                                         </div>
@@ -232,7 +240,8 @@ $siswakelas = $result['siswa'];
                                         if (isset($_POST['submitSort'])) {
                                             $sortBy = $_POST['sort_by'];
                                             $sortType = $_POST['sort_type'];
-                                            header('refresh:0; url=lihatrapor.php');
+                                            $semester = $_POST['semester'];
+                                            header('refresh:0; url=manajemennilai.php');
                                         }
                     
                                         if (isset($_POST['submitSearch'])) {
@@ -250,6 +259,7 @@ $siswakelas = $result['siswa'];
                                         <td>
                                             <form method="POST" action="cetakrapor.php">
                                                 <input type="hidden" name="id_siswa" value="<?= $id_siswa ?>">
+                                                <input type="hidden" name="semester" value="<?= $semester ?>">
                                                 <button type="submit" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Lihat">
                                                     <i class="bi bi-file-earmark-fill"></i>
                                                 </button>
