@@ -99,6 +99,12 @@ $siswakelas = $result['siswa'];
                                 <span>Lihat Rapor Siswa</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="akun.php" class='sidebar-link'>
+                                <i class="bi bi-person-fill"></i>
+                                <span>Akun Saya</span>
+                            </a>
+                        </li>
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">

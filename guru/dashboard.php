@@ -99,6 +99,12 @@ if ($jumlahSiswa == 0 || $sudahInput == 0){
                                 <span>Manajemen Nilai Siswa</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="akun.php" class='sidebar-link'>
+                                <i class="bi bi-person-fill"></i>
+                                <span>Akun Saya</span>
+                            </a>
+                        </li>
                     </ul>
                     <ul class="menu  position-absolute bottom-0">
                         <footer class="card-footer">
@@ -209,7 +215,7 @@ if ($jumlahSiswa == 0 || $sudahInput == 0){
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted  bottom-0">
+                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
                     <div class="float-start">
                         Made with ❤ by 
                         <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>

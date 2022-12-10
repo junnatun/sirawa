@@ -52,30 +52,20 @@ $row2 = mysqli_fetch_assoc($sql2);
 if(isset($_POST['getDataSiswa'])) {
     $semester = $_POST['semester'];
     $ambil_data_siswa = mysqli_query($conn,"SELECT id_siswa FROM tb_mapel JOIN tb_siswa USING(id_kelas) WHERE id_mapel='$id_mapel'");
-    $data_terinput = mysqli_query($conn, "SELECT id_siswa, id_mapel, semester FROM tb_nilai");
     
-    while ($data1 = mysqli_fetch_array($ambil_data_siswa)) {
-        $id_siswa = $data1['id_siswa'];
-        while ($data_in = mysqli_fetch_array($data_terinput)){
-            $id_siswa_in = $data_in['id_siswa'];
-            $id_mapel_in = $data_in['id_mapel'];
-            $smt_in = $data_in['semester'];
+    while ($data = mysqli_fetch_array($ambil_data_siswa)) {
+        $id_siswa = $data['id_siswa'];
 
-            if(($id_siswa <> $id_siswa_in) || ($id_mapel <> $id_mapel_in) || ($semester <> $smt_in)){
-                $sql = "INSERT INTO tb_nilai VALUES ('$id_siswa', '$id_mapel', '$semester', '0', '0', '0', '0', '0', '0')";
-                $addToTable = mysqli_query($conn, $sql);
-                
-                if($addToTable) {
-                    header('refresh:0; url=manajemennilai.php');
-                    echo "<script>alert('Yeay, Ambil Data berhasil!')</script>";
-                } else {
-                    echo "<script>alert('Yahh, Ambil Data gagal!')</script>";
-                }
-            }else {
-                echo "<script>alert('aaYahh, Ambil Data gagal!')</script>";
-            }
+        //search data yang sudah ada
+        $data_terinput = mysqli_query($conn, "SELECT id_siswa, id_mapel, semester FROM tb_nilai
+                                                WHERE id_siswa='$id_siswa' AND  id_mapel = '$id_mapel' AND semester = '$semester'");
+
+        if($data_terinput->num_rows == 0){
+            $addToTable = mysqli_query($conn, "INSERT INTO tb_nilai VALUES ('$id_siswa', '$id_mapel', '$semester', '0', '0', '0', '0', '0', '0')");
+        }else {
+            header('refresh:0; url=manajemennilai.php');
+            echo "<script>alert('Semua data sudah diambil!')</script>";
         }
-        
     }
 }
 
@@ -100,8 +90,8 @@ if(isset($_POST['editData'])){
     
 }
 
-//HAPUS NILAI
-if(isset($_POST['delData'])){
+//RESET NILAI
+if(isset($_POST['resetNilai'])){
     $id_siswa=$_POST['id_siswa'];
     $semester=$_POST['semester'];
     $id_mapel=$_POST['id_mapel'];
@@ -109,9 +99,24 @@ if(isset($_POST['delData'])){
     $resetNilai=mysqli_query($conn,"UPDATE tb_nilai SET nilai_ph1='0', nilai_ph2='0', nilai_ph3='0', nilai_ph4='0', nilai_pts='0', nilai_pas='0' WHERE id_siswa='$id_siswa' AND semester='$semester' AND id_mapel='$id_mapel'");
     if($resetNilai){
         header('refresh:0; url=manajemennilai.php');
-        echo "<script>alert('Berhasil menghapus nilai siswa!')</script>";
+        echo "<script>alert('Berhasil mereset nilai siswa!')</script>";
     }else {
-        echo "<script>alert('Hapus data nilai gagal!')</script>";
+        echo "<script>alert('Reset data nilai gagal!')</script>";
+    }
+}
+
+//DELETE DATA
+if(isset($_POST['delData'])){
+    $id_siswa=$_POST['id_siswa'];
+    $semester=$_POST['semester'];
+    $id_mapel=$_POST['id_mapel'];
+
+    $delData=mysqli_query($conn,"DELETE FROM tb_nilai WHERE id_siswa='$id_siswa' AND semester='$semester' AND id_mapel='$id_mapel'");
+    if($delData){
+        header('refresh:0; url=manajemennilai.php');
+        echo "<script>alert('Berhasil menghapus data siswa!')</script>";
+    }else {
+        echo "<script>alert('Hapus data siswa gagal!')</script>";
     }
 }
 
@@ -172,6 +177,12 @@ if(isset($_POST['delData'])){
                             <a href="manajemennilai.php" class='sidebar-link'>
                                 <i class="bi bi-table"></i>
                                 <span>Manajemen Nilai Siswa</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="akun.php" class='sidebar-link'>
+                                <i class="bi bi-person-fill"></i>
+                                <span>Akun Saya</span>
                             </a>
                         </li>
                     </ul>
@@ -459,11 +470,11 @@ if(isset($_POST['delData'])){
                                                         <input type="hidden" name="id_siswa" value="<?= $id_siswa ?>">
                                                         <input type="hidden" name="semester" value="<?= $semester ?>">
                                                         <input type="hidden" name="id_mapel" value="<?= $id_mapel ?>">
-                                                            <p>Yakin hapus menghapus nilai dari <b><?= $nama; ?></b></p>
+                                                            <p>Yakin menghapus nilai dari <b><?= $nama; ?></b>?</p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
-                                                    </div>
+                                                            <button class="btn btn-outline-primary " type="submit" name="resetNilai">Reset Nilai</button>
+                                                            <button class="btn btn-outline-danger " type="submit" name="delData">Hapus Siswa</button>
                                                 </form>
                                             </div>
                                         </div>

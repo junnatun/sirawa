@@ -86,6 +86,12 @@ if ($_POST['semester'] == '') {
                                 <span>Lihat Rapor</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="akun.php" class='sidebar-link'>
+                                <i class="bi bi-person-fill"></i>
+                                <span>Akun Saya</span>
+                            </a>
+                        </li>
                     </ul>
                     <ul class="menu footer position-absolute bottom-0">
                         <footer class="card-footer">

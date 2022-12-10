@@ -5,18 +5,48 @@ include '../config.php';
 error_reporting(0);
 
 session_start();
+
+//security
 if(!isset($_SESSION['username'])){
     header("Location:../index.php");
     exit();
 }
 
+//ambil data user
 $id_user = $_SESSION['id_user'];
-$data = mysqli_query($conn, "SELECT * FROM tb_siswa s JOIN tb_ortu USING(id_siswa) JOIN tb_kelas USING(id_kelas) WHERE id_user = '$id_user'");
-$row = mysqli_fetch_assoc($data);
+$ambildata = mysqli_query($conn, "SELECT u.username, g.nama, k.kelas FROM tb_walikelas JOIN tb_user u USING(id_user) JOIN tb_guru g USING(id_guru) 
+                                    JOIN tb_kelas k USING(id_kelas) WHERE u.id_user = '$id_user'");
+$result = mysqli_fetch_assoc($ambildata);
+
+//EDIT PASSWORD
+if(isset($_POST['editPass'])){
+    $pass_lama = md5($_POST['pass_lama']);
+    $pass_baru = md5($_POST['pass_baru']);
+    $repass_baru = md5($_POST['repass_baru']);
+
+    $getDataUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user='$id_user' AND password='$pass_lama'");
+
+    if ($getDataUser->num_rows > 0) {
+        if ($pass_baru == $repass_baru) {
+            $editPass = mysqli_query($conn, "UPDATE tb_user SET password='$pass_baru' WHERE id_user='$id_user'");
+            if ($editPass) {
+                header('refresh:0; url=akun.php');
+                echo "<script>alert('Password berhasil diubah!')</script>";
+            } else {
+                header('refresh:0; url=akun.php');
+                echo "<script>alert('Ubah password gagal!')</script>";
+            }
+        } else {
+            header('refresh:0; url=akun.php');
+            echo "<script>alert('Password tidak cocok!')</script>";
+        }
+    } else {
+        header('refresh:0; url=akun.php');
+        echo "<script>alert('Password lama salah!')</script>";
+    }
+}
 
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -25,13 +55,15 @@ $row = mysqli_fetch_assoc($data);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Siswa</title>
+    <title>Akun Saya</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
     <link rel="shortcut icon" href="../assets/images/logo/favicon.svg" type="image/x-icon">
     <link rel="shortcut icon" href="../assets/images/logo/favicon.png" type="image/png">
 
+    <link rel="stylesheet" href="../assets/extensions/simple-datatables/style.css">
+    <link rel="stylesheet" href="../assets/css/pages/simple-datatables.css">
     <link rel="stylesheet" href="../assets/css/shared/iconly.css">
 
 </head>
@@ -58,11 +90,10 @@ $row = mysqli_fetch_assoc($data);
                         </div>
                     </div>
                 </div>
-
                 <!--menu-->
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-item active ">
+                        <li class="sidebar-item">
                             <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-house-fill"></i>
                                 <span>Dashboard</span>
@@ -71,10 +102,10 @@ $row = mysqli_fetch_assoc($data);
                         <li class="sidebar-item">
                             <a href="lihatrapor.php" class='sidebar-link'>
                                 <i class="bi bi-award-fill"></i>
-                                <span>Lihat Rapor</span>
+                                <span>Lihat Rapor Siswa</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item active">
                             <a href="akun.php" class='sidebar-link'>
                                 <i class="bi bi-person-fill"></i>
                                 <span>Akun Saya</span>
@@ -93,24 +124,46 @@ $row = mysqli_fetch_assoc($data);
                 <!--/menu-->
             </div>
         </div>
-        
         <div id="main">
             <div class="page-heading">
-                <h3>Dashboard</h3>
+            <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3>Akun Saya</h3>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Akun Saya</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!--content-->
             <div class="page-content">
                 <section class="row">
                     <div class="col-12 col-lg-9">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h3>Halo, <?=$row['nama'];?>! 👋 </h3>
-                                        <p class="text-subtitle text-muted">Lihat hasil kompetensi belajarmu di Sirawa.</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <img src="../assets/images/pic-dash3.png" height="180">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <table class="table table-borderless" id="table1">
+                                            <tbody>
+                                            <tr>
+                                                <th>Username</th>
+                                                <td>:</td>
+                                                <td><?=$result['username'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Password</th>
+                                                <td>:</td>
+                                                <td>*****</td>
+                                            </tr>
+                                        </table>
+                                        <a href="#editModal<?=$id_user?>" class="btn btn-primary" type="submit" data-bs-toggle="modal" data-bs-target="#editModal<?=$id_user?>">Ubah Password</a>
                                     </div>
                                 </div>
                             </div>
@@ -119,81 +172,25 @@ $row = mysqli_fetch_assoc($data);
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Data Siswa</h4>
+                                        <h4>Data Wali Kelas</h4>
                                     </div>
                                     <div class="card-body">
-                                        <table class="table table-striped" id="table1">
-                                            <!--data-->
+                                        <table class="table table-borderless" id="table1">
                                             <tbody>
                                             <tr>
-                                                <th>ID Siswa</th>
-                                                <td><?=$row['id_siswa'];?></td>
+                                                <th>Kelas Wali</th>
+                                                <td>:</td>
+                                                <td><?=$result['kelas'];?></td>
                                             </tr>
                                             <tr>
-                                                <th>Nama</th>
-                                                <td><?=$row['nama'];?></td>
+                                                <th>Nama Guru Wali</th>
+                                                <td>:</td>
+                                                <td><?=$result['nama'];?></td>
                                             </tr>
-                                            <tr>
-                                                <th>NISN</th>
-                                                <td><?=$row['nisn'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Tempat, Tanggal Lahir</th>
-                                                <td><?=$row['tempat_lahir'];?> , <?=$row['tgl_lahir'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Jenis Kelamin</th>
-                                                <td><?=$row['jenis_kelamin'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Agama</th>
-                                                <td><?=$row['agama'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nomor Telepon</th>
-                                                <td><?=$row['no_telp'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Kelas</th>
-                                                <td><?=$row['kelas'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nama Ayah</th>
-                                                <td><?=$row['nama_ayah'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Pekerjaan Ayah</th>
-                                                <td><?=$row['profesi_ayah'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Alamat Ayah</th>
-                                                <td><?=$row['alamat_ayah'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nomor Telepon Ayah</th>
-                                                <td><?=$row['no_telp_ayah'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nama Ibu</th>
-                                                <td><?=$row['nama_ibu'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Pekerjaan Ibu</th>
-                                                <td><?=$row['profesi_ibu'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Alamat Ibu</th>
-                                                <td><?=$row['alamat_ibu'];?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nomor Telepon Ibu</th>
-                                                <td><?=$row['no_telp_ibu'];?></td>
-                                            </tr>
-                                            <!--/data-->
                                         </table>
                                         <div class="alert alert-light-danger">
                                             <i class="bi bi-exclamation-circle"></i>
-                                            Jika terdapat kesalahan data diri, silakan menghubungi wali kelas atau admin Sirawa. 
+                                            Apabila terdapat kesalahan data, silahkan menghubungi admin Sirawa. 
                                         </div>
                                     </div>
                                 </div>
@@ -201,25 +198,10 @@ $row = mysqli_fetch_assoc($data);
                         </div>
 
                     </div>
-                    <div class="col-12 col-lg-3">
-                        <div class="card">
-                            <div class="card-body py-4 px-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-xl">
-                                        <img src="../assets/images/faces/1.jpg" alt="Face 1">
-                                    </div>
-                                    <div class="ms-3 name">
-                                        <h5 class="font-bold"><?php echo $_SESSION['username']; ?></h5>
-                                        <h6 class="text-muted mb-0">@<?php echo $_SESSION['id_user']; ?></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted bottom-0">
+                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
                     <div class="float-start">
                         Made with ❤ by 
                         <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>
@@ -228,11 +210,46 @@ $row = mysqli_fetch_assoc($data);
             </footer>
         </div>
     </div>
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal<?=$id_user?>" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <form method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Ubah Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameLarge" class="form-label">Password Lama</label>
+                            <input type="password" name="pass_lama" class="form-control" placeholder="Masukkan password lama" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameLarge" class="form-label">Password Baru</label>
+                            <input type="password" name="pass_baru" class="form-control" placeholder="Masukkan password baru" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameLarge" class="form-label">Konfirmasi Password Baru</label>
+                            <input type="password" name="repass_baru" class="form-control" placeholder="Masukkan ulang password baru" required/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" name="editPass" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <script src="../assets/js/bootstrap.js"></script>
     <script src="../assets/js/app.js"></script>
-
-    <!-- Need: Apexcharts -->
-    <script src="../assets/js/pages/dashboard.js"></script>
 
 </body>
 
