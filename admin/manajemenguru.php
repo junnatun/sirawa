@@ -1,6 +1,7 @@
 <?php
 
 include '../config.php';
+include '../functions/functions.php';
 
 error_reporting(0);
 
@@ -278,7 +279,7 @@ if (isset($_POST['editData'])) {
                                         <td><?=$nip?></td>
                                         <td><?=$jk?></td>
                                         <td><?=$tempat?></td>
-                                        <td><?=$tgl?></td>
+                                        <td><?=tanggal($tgl)?></td>
                                         <td><?=$agama?></td>
                                         <td><?=$no_telp?></td>
                                         <td><?=$alamat?></td>

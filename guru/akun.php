@@ -1,6 +1,7 @@
 <?php
 
 include '../config.php';
+include '../functions/functions.php';
 
 error_reporting(0);
 
@@ -198,7 +199,7 @@ if(isset($_POST['editPass'])){
                                             <tr>
                                                 <th>Tempat, Tanggal Lahir</th>
                                                 <td>:</td>
-                                                <td><?=$result['tempat_lahir'];?>, <?=$result['tgl_lahir'];?></td>
+                                                <td><?=$result['tempat_lahir'];?>, <?=tanggal($result['tgl_lahir']);?></td>
                                             </tr>
                                             <tr>
                                                 <th>Agama </th>

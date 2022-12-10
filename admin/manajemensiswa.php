@@ -407,7 +407,7 @@ if (isset($_POST['editData'])) {
                                         <td><?=$nisn?></td>
                                         <td><?=$jk?></td>
                                         <td><?=$tempat?></td>
-                                        <td><?=$tgl?></td>
+                                        <td><?=tanggal($tgl)?></td>
                                         <td><?=$agama?></td>
                                         <td><?=$alamat?></td>
                                         <td><?=$no?></td>

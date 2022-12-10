@@ -1,6 +1,7 @@
 <?php
 
 include '../config.php';
+include '../functions/functions.php';
 
 error_reporting(0);
 
@@ -139,7 +140,7 @@ $row = mysqli_fetch_assoc($data);
                                             </tr>
                                             <tr>
                                                 <th>Tempat, Tanggal Lahir</th>
-                                                <td><?=$row['tempat_lahir'];?> , <?=$row['tgl_lahir'];?></td>
+                                                <td><?=$row['tempat_lahir'];?> , <?=tanggal($row['tgl_lahir']);?></td>
                                             </tr>
                                             <tr>
                                                 <th>Jenis Kelamin</th>
