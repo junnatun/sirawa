@@ -24,8 +24,9 @@ if (isset($_POST['addData'])){
     $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
     $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
     $id_kelas = $data_id_kelas['id_kelas'];
-    
-    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$kelas','wali kelas')");
+    $password = md5('$kelas');
+
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$password','wali kelas')");
     if($addUser){
         $addWali = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', '$id_kelas', '$id_guru')");
         if($addWali){

@@ -39,7 +39,7 @@ if (isset($_POST['addData'])){
     $alamat_ibu = $_POST['alamat_ibu'];
     $no_telp_ibu = $_POST['no_telp_ibu'];
 
-    $password = generatePass($conn, $tgl_lahir);
+    $password = md5(generatePass($conn, $tgl_lahir));
     $username = createUsername($conn, $nama, $tgl_lahir);
     
     $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$username','$password','siswa')");
@@ -322,7 +322,7 @@ if (isset($_POST['addData'])){
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button name="addData" type="submit" class="btn btn-primary me-1 mb-1">Simpan Perubahan</button>
+                                                <button name="addData" type="submit" class="btn btn-primary me-1 mb-1">Simpan Data</button>
                                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Batal</button>
                                             </div>
                                         </form>

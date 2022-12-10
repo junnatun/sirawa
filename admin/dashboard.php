@@ -57,7 +57,7 @@ if(isset($_POST['delData'])) {
 if (isset($_POST['editData'])) {
     $id_user = $_POST['id_user'];
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = md5($_POST['password']);
     $role = $_POST['role'];
     
     $editQuery = "UPDATE tb_user SET username='$username', password='$password', role='$role' WHERE id_user='$id_user'";
@@ -374,7 +374,7 @@ if (isset($_POST['editData'])) {
                                                                 <div class="row">
                                                                     <div class="col mb-3">
                                                                         <label for="nameLarge" class="form-label">Password</label>
-                                                                        <input type="text" name="password" class="form-control" value="<?= $password ?>" />
+                                                                        <input type="password" name="password" class="form-control" value="<?= $password ?>" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">

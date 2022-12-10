@@ -23,7 +23,8 @@ if (isset($_POST['addData'])){
     $agama = $_POST['agama'];
     $alamat = $_POST['alamat'];
     $no_telp = $_POST['no_telp'];
-    $password = generatePass($conn, $tgl_lahir);
+
+    $password = md5(generatePass($conn, $tgl_lahir));
     $username = createUsername($conn, $nama, $tgl_lahir);
 
     $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$username','$password','guru')");
