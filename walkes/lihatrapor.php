@@ -251,7 +251,8 @@ $siswakelas = $result['siswa'];
                                             $searchValue = $_POST['search_value'];
                                             header('refresh:0; url=lihatrapor.php');
                                         }
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas = '$id_kelas'");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_kelas USING(id_kelas) WHERE id_kelas = '$id_kelas' 
+                                        HAVING id_siswa LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' ORDER BY $sortBy $sortType");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_siswa =$data['id_siswa'];
                                             $nama =$data['nama'];

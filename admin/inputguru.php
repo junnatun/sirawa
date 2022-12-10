@@ -182,7 +182,7 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Tanggal Lahir</label>
-                                                        <input name="tgl_lahir" type="date" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" required >
+                                                        <input name="tgl_lahir" type="date" id="first-name-column" class="form-control" required >
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,8 +191,8 @@ if (isset($_POST['addData'])){
                                                     <fieldset class="form-group">
                                                         <label for="first-name-column">Jenis Kelamin</label>
                                                         <select name="jenis_kelamin" class="form-select" id="basicSelect">
-                                                            <option value="P">Perempuan</option>
-                                                            <option value="L">Laki-Laki</option>
+                                                            <option value="Perempuan">Perempuan</option>
+                                                            <option value="Laki-Laki">Laki-Laki</option>
                                                         </select>
                                                     </fieldset>
                                                 </div>

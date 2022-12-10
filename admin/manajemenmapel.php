@@ -280,6 +280,28 @@ if (isset($_POST['editData'])) {
                                         </td>
                                     </tr>
 
+                                    <!-- Modal Hapus -->
+                                    <div class="modal fade" id="hapusModal<?= $id_mapel, $id_kelas; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title" id="modalToggleLabel">Hapus Mata Pelajaran</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="POST">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id_mapel" value="<?= $id_mapel ?>">
+                                                        <input type="hidden" name="id_kelas" value="<?= $id_kelas ?>">
+                                                        <p>Yakin hapus mapel <b><?= $mapel; ?></b><br> dengan ID <b><?= $id_mapel ?></b> di kelas <b><?=$kelas?></b> ?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <!-- Modal Edit -->
                                     <div class="modal fade" id="editModal<?= $id_mapel, $id_kelas;?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -353,27 +375,7 @@ if (isset($_POST['editData'])) {
                                     </div>
                                     </div>
 
-                                    <!-- Modal Hapus -->
-                                    <div class="modal fade" id="hapusModal<?= $id_mapel, $id_kelas; ?>" aria-labelledby="modalToggleLabel" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h3 class="modal-title" id="modalToggleLabel">Hapus Mata Pelajaran</h3>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form method="POST">
-                                                    <div class="modal-body">
-                                                        <input type="hidden" name="id_mapel" value="<?= $id_mapel ?>">
-                                                        <input type="hidden" name="id_kelas" value="<?= $id_kelas ?>">
-                                                        <p>Yakin hapus mapel <b><?= $mapel; ?></b><br> dengan ID <b><?= $id_mapel ?></b> di kelas <b><?=$kelas?></b> ?</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-primary d-grid w-100" type="submit" name="delData">Hapus</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     <?php } ?>
                                     <!--/data-->
                             </table>

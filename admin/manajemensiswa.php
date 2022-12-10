@@ -57,9 +57,7 @@ if (isset($_POST['editData'])) {
     $id_user = $_POST['id_user'];
     $id_siswa = $_POST['id_siswa'];
     $nama =$_POST['nama'];
-
-    $kelas = $_POST['kelas'];
-    $id_kelas = "K$kelas";
+    $id_kelas = $_POST['id_kelas'];
 
     $nisn =$_POST['nisn'];
     $jk =$_POST['jenis_kelamin'];
@@ -422,10 +420,10 @@ if (isset($_POST['editData'])) {
                                         <td><?=$alamat_ibu?></td>
                                         <td><?=$no_ibu?></td>
                                         <td>
-                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit <?=$nama?>">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
+                                            <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus <?=$nama?>">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
@@ -486,8 +484,8 @@ if (isset($_POST['editData'])) {
                                                 <label for="emailLarge" class="form-label">Jenis Kelamin</label>
                                                 <select class="form-select" name="jenis_kelamin" aria-label="Default select example">
                                                     <option selected value="<?= $jk ?>"><?= $jk?></option>
-                                                    <option value="L">Laki-Laki</option>
-                                                    <option value="P">Perempuan</option>
+                                                    <option value="Laki-Laki">Laki-Laki</option>
+                                                    <option value="Perempuan">Perempuan</option>
                                                 </select>
                                                 </div>
                                             </div>

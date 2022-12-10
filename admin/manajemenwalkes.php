@@ -70,19 +70,9 @@ if(isset($_POST['delData'])) {
 //EDIT DATA
 if (isset($_POST['editData'])) {
     $id_user = $_POST['id_user'];
-
-    // $nama = $_POST['nama'];
-    // $fetch_id_guru = mysqli_query($conn, "SELECT id_guru FROM tb_guru WHERE nama='$nama'");
-    // $data_id_guru = mysqli_fetch_array($fetch_id_guru);
-    // $id_guru = $data_id_guru['id_guru'];
-
-    $id_guru = $_POST['id_guru'];
-
-    $kelas = $_POST['kelas'];
-    $id_kelas = "K$kelas";
+    $id_guru = $_POST['id_guru'];    
     
-    
-    $editQuery = "UPDATE tb_walikelas SET id_kelas='$id_kelas', id_guru='$id_guru' WHERE id_user='$id_user'";
+    $editQuery = "UPDATE tb_walikelas SET id_guru='$id_guru' WHERE id_user='$id_user'";
     $edit = mysqli_query($conn, $editQuery);
     if ($edit) {
         header('refresh:0; url=manajemenwalkes.php');

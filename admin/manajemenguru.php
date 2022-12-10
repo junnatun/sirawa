@@ -257,7 +257,7 @@ if (isset($_POST['editData'])) {
                                         WHERE id_guru LIKE '%$searchValue%' OR username LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' 
                                         OR nip LIKE '%$searchValue%' OR jenis_kelamin LIKE '%$searchValue%' OR tempat_lahir LIKE '%$searchValue%' 
                                         OR tgl_lahir LIKE '%$searchValue%' OR agama LIKE '%$searchValue%' OR alamat LIKE '%$searchValue%' 
-                                        OR no_telp LIKE '%$searchValue%' ORDER BY $sortBy $sortType");
+                                        OR no_telp LIKE '%$searchValue%' ORDER BY $sortBy $sortType"); 
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_user = $data['id_user'];
                                             $id_guru = $data['id_guru'];
@@ -283,10 +283,10 @@ if (isset($_POST['editData'])) {
                                         <td><?=$no_telp?></td>
                                         <td><?=$alamat?></td>
                                         <td>                                        
-                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit <?=$nama?>">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus">
+                                            <a href="#hapusModal <?= $id_user; ?>" type="submit" class="btn btn-outline-danger icon rounded-circle" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $id_user; ?>" data-bs-placement="bottom" title="Hapus <?=$nama?>">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
@@ -326,8 +326,8 @@ if (isset($_POST['editData'])) {
                                                 <label for="emailLarge" class="form-label">Jenis Kelamin</label>
                                                 <select class="form-select" name="jenis_kelamin" aria-label="Default select example">
                                                     <option selected value="<?= $jk ?>"><?= $jk?></option>
-                                                    <option value="L">Laki-Laki</option>
-                                                    <option value="P">Perempuan</option>
+                                                    <option value="Laki-Laki">Laki-Laki</option>
+                                                    <option value="Perempuan">Perempuan</option>
                                                 </select>
                                                 </div>
                                             </div>

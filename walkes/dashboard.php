@@ -41,10 +41,7 @@ if (isset($_POST['editData'])) {
     $id_user = $_POST['id_user'];
     $id_siswa = $_POST['id_siswa'];
     $nama =$_POST['nama'];
-
-    $kelas = $_POST['kelas'];
-    $id_kelas = "K$kelas";
-
+    $id_kelas = $_POST['id_kelas'];
     $nisn =$_POST['nisn'];
     $jk =$_POST['jenis_kelamin'];
     $tempat =$_POST['tempat'];
@@ -67,7 +64,7 @@ if (isset($_POST['editData'])) {
     if ($editSiswa) {
         $editOrtu = mysqli_query($conn, "UPDATE tb_ortu SET nama_ayah='$nama_ayah', profesi_ayah='$profesi_ayah', alamat_ayah='$alamat_ayah', no_telp_ayah='$no_ayah', nama_ibu='$nama_ibu', profesi_ibu='$profesi_ibu', alamat_ibu='$alamat_ibu', no_telp_ibu='$no_ibu' WHERE id_siswa='$id_siswa'");
         if($editOrtu){
-            header('refresh:0; url=manajemensiswa.php');
+            header('refresh:0; url=dashboard.php');
             echo "<script>alert('Berhasil mengedit data siswa!')</script>";
         }else {
             echo "<script>alert('Edit data siswa gagal!')</script>";
@@ -183,8 +180,8 @@ if (isset($_POST['editData'])) {
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                    <div class="col-6 col-lg-4 col-md-6">
+                    <div class="row justify-content-between">
+                    <div class="col-6 col-lg-6 col-md-6">
                         <div class="card">
                             <div class="card-body px-4 py-4-5">
                                 <div class="row">
@@ -201,7 +198,7 @@ if (isset($_POST['editData'])) {
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-lg-4 col-md-6">
+                    <div class="col-6 col-lg-6 col-md-6">
                         <div class="card">
                             <div class="card-body px-4 py-4-5">
                                 <div class="row">
@@ -213,23 +210,6 @@ if (isset($_POST['editData'])) {
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Jumlah Siswa Wali</h6>
                                         <h6 class="font-extrabold mb-0"><?=$siswakelas?></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-4 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                        <div class="stats-icon green mb-2">
-                                            <i class="iconly-boldCalendar"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0">1</h6>
                                     </div>
                                 </div>
                             </div>
@@ -327,7 +307,12 @@ if (isset($_POST['editData'])) {
                                             $searchValue = $_POST['search_value'];
                                             header('refresh:0; url=dashboard.php');
                                         }
-                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_ortu USING(id_siswa) JOIN tb_user USING(id_user) JOIN tb_kelas USING(id_kelas) WHERE id_kelas='$id_kelas'");
+                                        $pullData=mysqli_query($conn, "SELECT * FROM tb_siswa JOIN tb_ortu USING(id_siswa) JOIN tb_user USING(id_user) JOIN tb_kelas USING(id_kelas) 
+                                        WHERE id_kelas='$id_kelas' HAVING id_siswa LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' OR kelas LIKE '%$searchValue%' 
+                                        OR nisn LIKE '%$searchValue%' OR jenis_kelamin LIKE '%$searchValue%' OR tempat_lahir LIKE '%$searchValue%' OR tgl_lahir LIKE '%$searchValue%' 
+                                        OR agama LIKE '%$searchValue%' OR alamat LIKE '%$searchValue%' OR no_telp LIKE '%$searchValue%' OR nama_ayah LIKE '%$searchValue%' 
+                                        OR profesi_ayah LIKE '%$searchValue%' OR alamat_ayah LIKE '%$searchValue%' OR no_telp_ayah LIKE '%$searchValue%' OR nama_ibu LIKE '%$searchValue%' 
+                                        OR profesi_ibu LIKE '%$searchValue%' OR alamat_ibu LIKE '%$searchValue%' OR no_telp_ibu LIKE '%$searchValue%' ORDER BY $sortBy $sortType;");
                                         while($data=mysqli_fetch_array($pullData)){
                                             $id_user =$data['id_user'];
                                             $id_siswa =$data['id_siswa'];
@@ -370,7 +355,7 @@ if (isset($_POST['editData'])) {
                                         <td><?=$alamat_ibu?></td>
                                         <td><?=$no_ibu?></td>
                                         <td>
-                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit">
+                                            <a href="#editModal<?= $id_user; ?>" class="btn btn-outline-primary icon rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal<?= $id_user; ?>" data-bs-placement="bottom" title="Edit <?=$nama?>">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                         </td>
@@ -403,7 +388,21 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Kelas</label>
-                                                <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" />
+                                                <!-- <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" /> -->
+                                                    <select class="form-select" name="id_kelas" aria-label="Default select example">
+                                                        <option selected value="<?= $id_kelas?>"><?=$kelas?></option>
+                                                            <?php
+                                                                $ambil_data_kelas = mysqli_query($conn,"SELECT id_kelas, kelas FROM tb_kelas ORDER BY kelas");
+
+                                                                while ($data = mysqli_fetch_array($ambil_data_kelas)) {
+                                                                    $id_kelas = $data['id_kelas'];
+                                                                    $kelas = $data['kelas'];
+                                                                ?>
+                                                                    <option value="<?= $id_kelas ?>"><?= $kelas ?></option>
+                                                                <?php
+                                                                }
+                                                                ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -411,8 +410,8 @@ if (isset($_POST['editData'])) {
                                                 <label for="emailLarge" class="form-label">Jenis Kelamin</label>
                                                 <select class="form-select" name="jenis_kelamin" aria-label="Default select example">
                                                     <option selected value="<?= $jk ?>"><?= $jk?></option>
-                                                    <option value="L">Laki-Laki</option>
-                                                    <option value="P">Perempuan</option>
+                                                    <option value="Laki-Laki">Laki-Laki</option>
+                                                    <option value="Perempuan">Perempuan</option>
                                                 </select>
                                                 </div>
                                             </div>

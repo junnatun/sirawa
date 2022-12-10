@@ -4,12 +4,14 @@ include '../config.php';
 
 error_reporting(0);
 
+//security
 session_start();
 if(!isset($_SESSION['username'])){
     header("Location:../index.php");
     exit();
 }
 
+//Ambil data guru dan mapel
 $id_user = $_SESSION['id_user'];
 $ambildata = mysqli_query($conn, "SELECT * FROM tb_guru JOIN tb_mapel USING(id_guru) WHERE id_user = '$id_user'");
 $result = mysqli_fetch_assoc($ambildata);
@@ -20,10 +22,10 @@ $id_mapel = $result['id_mapel'];
 if ($_POST['sort_by'] == '') {
     $sortBy = 'id_siswa';
     $sortType = 'ASC';
-    $semester='1';
+    $smt='1';
     $_POST['sort_by'] = $sortBy;
     $_POST['sort_type'] = $sortType;
-    $_POST['semester']= $semester;
+    $_POST['smt']= $smt;
 }
 
 //Inisialisasi nilai POST untuk searching
@@ -48,24 +50,32 @@ $row2 = mysqli_fetch_assoc($sql2);
 
 //AMBIL DATA
 if(isset($_POST['getDataSiswa'])) {
-
     $semester = $_POST['semester'];
+    $ambil_data_siswa = mysqli_query($conn,"SELECT id_siswa FROM tb_mapel JOIN tb_siswa USING(id_kelas) WHERE id_mapel='$id_mapel'");
+    $data_terinput = mysqli_query($conn, "SELECT id_siswa, id_mapel, semester FROM tb_nilai");
+    
+    while ($data1 = mysqli_fetch_array($ambil_data_siswa)) {
+        $id_siswa = $data1['id_siswa'];
+        while ($data_in = mysqli_fetch_array($data_terinput)){
+            $id_siswa_in = $data_in['id_siswa'];
+            $id_mapel_in = $data_in['id_mapel'];
+            $smt_in = $data_in['semester'];
 
-    $ambil_data_siswa = mysqli_query($conn,"SELECT id_siswa FROM tb_mapel JOIN tb_siswa USING(id_kelas) JOIN tb_kelas USING(id_kelas) WHERE id_mapel='$id_mapel'");
-
-    while ($data = mysqli_fetch_array($ambil_data_siswa)) {
-        $id_siswa = $data['id_siswa'];
-
-        $sql = "INSERT INTO tb_nilai
-            VALUES ('$id_siswa', '$id_mapel', '$semester', '0', '0', '0', '0', '0', '0')";
-
-        $addToTable = mysqli_query($conn, $sql);
-        if($addToTable) {
-            header('refresh:0; url=manajemennilai.php');
-            echo "<script>alert('Yeay, Ambil Data berhasil!')</script>";
-        } else {
-            echo "<script>alert('Yahh, Ambil Data gagal!')</script>";
+            if(($id_siswa <> $id_siswa_in) || ($id_mapel <> $id_mapel_in) || ($semester <> $smt_in)){
+                $sql = "INSERT INTO tb_nilai VALUES ('$id_siswa', '$id_mapel', '$semester', '0', '0', '0', '0', '0', '0')";
+                $addToTable = mysqli_query($conn, $sql);
+                
+                if($addToTable) {
+                    header('refresh:0; url=manajemennilai.php');
+                    echo "<script>alert('Yeay, Ambil Data berhasil!')</script>";
+                } else {
+                    echo "<script>alert('Yahh, Ambil Data gagal!')</script>";
+                }
+            }else {
+                echo "<script>alert('aaYahh, Ambil Data gagal!')</script>";
+            }
         }
+        
     }
 }
 
@@ -248,7 +258,7 @@ if(isset($_POST['delData'])){
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Semester</h6>
-                                        <h6 class="font-extrabold mb-0"><?= $_POST['semester'] ?></h6>
+                                        <h6 class="font-extrabold mb-0"><?= $_POST['smt'] ?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -279,8 +289,8 @@ if(isset($_POST['delData'])){
                                                 <option value="ASC">Ascending</option>
                                                 <option value="DESC">Descending</option>
                                             </select>
-                                            <select class="form-select" id="inputGroupSelect04" name="semester">
-                                                <option selected value="<?= $_POST['semester'] ?>">SEMESTER <?= $_POST['semester'] ?></option>
+                                            <select class="form-select" id="inputGroupSelect04" name="smt">
+                                                <option selected value="<?= $_POST['smt'] ?>">SEMESTER <?= $_POST['smt'] ?></option>
                                                 <option value="1">Semester 1</option>
                                                 <option value="2">Semester 2</option>
                                             </select>
@@ -306,6 +316,7 @@ if(isset($_POST['delData'])){
                                         <th>ID Siswa</th>
                                         <th>Nama</th>
                                         <th>Kelas</th>
+                                        <th>smt</th>
                                         <th>PH1</th>
                                         <th>PH2</th>
                                         <th>PH3</th>
@@ -321,7 +332,7 @@ if(isset($_POST['delData'])){
                                         if (isset($_POST['submitSort'])) {
                                             $sortBy = $_POST['sort_by'];
                                             $sortType = $_POST['sort_type'];
-                                            $semester = $_POST['semester'];
+                                            $smt = $_POST['smt'];
                                             header('refresh:0; url=manajemennilai.php');
                                         }
                     
@@ -329,8 +340,9 @@ if(isset($_POST['delData'])){
                                             $searchValue = $_POST['search_value'];
                                             header('refresh:0; url=manajemennilai.php');
                                         }
+                                        
                                         $pullData=mysqli_query($conn, "SELECT * FROM tb_nilai JOIN tb_siswa USING(id_siswa) JOIN tb_kelas USING(id_kelas) 
-                                        WHERE id_mapel='$id_mapel'AND semester='$semester' HAVING id_siswa LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' OR kelas LIKE '%$searchValue%' 
+                                        WHERE id_mapel='$id_mapel' AND semester = '$smt' HAVING id_siswa LIKE '%$searchValue%' OR nama LIKE '%$searchValue%' OR kelas LIKE '%$searchValue%' 
                                         OR nilai_ph1 LIKE '%$searchValue%' OR nilai_ph2 LIKE '%$searchValue%' OR nilai_ph3 LIKE '%$searchValue%' OR nilai_ph4 LIKE '%$searchValue%' 
                                         OR nilai_pts LIKE '%$searchValue%' OR nilai_pas LIKE '%$searchValue%' ORDER BY $sortBy $sortType");
                                         while($data=mysqli_fetch_array($pullData)){
@@ -349,6 +361,7 @@ if(isset($_POST['delData'])){
                                         <td><?=$id_siswa?></td>
                                         <td><?=$nama?></td>
                                         <td><?=$kelas?></td>
+                                        <td><?=$semester?></td>
                                         <td><?=$ph1?></td>
                                         <td><?=$ph2?></td>
                                         <td><?=$ph3?></td>
@@ -488,8 +501,8 @@ if(isset($_POST['delData'])){
                     <div class="col mb-5">
                         <label for="emailLarge" class="form-label">Semester</label>
                         <select class="form-select" name="semester" aria-label="Default select example">
-                            <option value=1>1 - Gasal</option>
-                            <option value=2>2 - Genap</option>
+                            <option value='1'>1 - Gasal</option>
+                            <option value='2'>2 - Genap</option>
                         </select>
                     </div>
                 </div>

@@ -19,6 +19,7 @@ $nisn = $row['nisn'];
 $kelas = $row['kelas'];
 $id_kelas = "K$kelas";
 
+//Inisialisasi Nilai POST untuk semester
 if ($_POST['semester'] == '') {
     $semester='1';
     $_POST['semester']= $semester;
@@ -231,7 +232,6 @@ if ($_POST['semester'] == '') {
                                         </tr>
                                         <?php } ?>
                                     </thead>
-
                                 </table>
                             </div>
                             <div class="alert alert-primary">

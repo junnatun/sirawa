@@ -24,11 +24,7 @@ if (isset($_POST['addData'])){
     $tgl_lahir = $_POST['tgl_lahir'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $agama = $_POST['agama'];
-
-    $kelas = $_POST['kelas'];
-    $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
-    $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
-    $id_kelas = $data_id_kelas['id_kelas'];
+    $id_kelas = $_POST['id_kelas'];
 
     $alamat = $_POST['alamat'];
     $no_telp = $_POST['no_telp'];
@@ -200,7 +196,7 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="first-name-vertical">NISN</label>
-                                                        <input name="nisn" type="number" id="first-name-vertical" class="form-control" name="nip" placeholder="Contoh : 1972XXXXXXXXXXXXXX" required>
+                                                        <input name="nisn" type="number" id="first-name-vertical" class="form-control" name="nip" placeholder="Contoh : 1021XXXXX" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -214,7 +210,7 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Tanggal Lahir</label>
-                                                        <input name="tgl_lahir" type="date" id="first-name-column" class="form-control" placeholder="YYYY-MM-DD" required >
+                                                        <input name="tgl_lahir" type="date" id="first-name-column" class="form-control" required >
                                                     </div>
                                                 </div>
                                             </div>
@@ -223,8 +219,8 @@ if (isset($_POST['addData'])){
                                                     <fieldset class="form-group">
                                                         <label for="first-name-column">Jenis Kelamin</label>
                                                         <select name="jenis_kelamin" class="form-select" id="basicSelect">
-                                                            <option value="P">Perempuan</option>
-                                                            <option value="L">Laki-Laki</option>
+                                                            <option value="Perempuan">Perempuan</option>
+                                                            <option value="Laki-Laki">Laki-Laki</option>
                                                         </select>
                                                     </fieldset>
                                                 </div>
@@ -237,7 +233,6 @@ if (isset($_POST['addData'])){
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
                                                         <label for="first-name-column">Kelas</label>
-                                                        <!-- <input name="kelas" type="text" id="first-name-column" class="form-control" placeholder="Contoh : 9A" required > -->
                                                         <select class="form-select" name="id_kelas" aria-label="Default select example">
                                                             <?php
                                                                 $ambil_data_kelas = mysqli_query($conn,"SELECT id_kelas, kelas FROM tb_kelas ORDER BY kelas");
