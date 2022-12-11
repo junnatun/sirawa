@@ -433,7 +433,7 @@ if (isset($_POST['editData'])) {
                                     <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
-                                            <input type="text" name="id_user" value="<?= $id_user; ?>">
+                                            <input type="hidden" name="id_user" value="<?= $id_user; ?>">
                                             <input type="hidden" name="id_siswa" value="<?= $id_siswa; ?>">
                                         <div class="modal-content">
                                             <div class="modal-header">
