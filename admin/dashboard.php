@@ -305,7 +305,7 @@ if (isset($_POST['editData'])) {
                                     </div>                                    
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-striped" id="table1">
+                                    <table class="table table-hover" id="table1">
                                         <thead class="text-nowrap">
                                             <tr>
                                                 <th>ID User</th>

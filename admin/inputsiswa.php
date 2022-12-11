@@ -17,6 +17,7 @@ $id_user = getIdUser($conn);
 //GET ID SISWA
 $id_siswa = getIdSiswa($conn);
 
+//ADD DATA
 if (isset($_POST['addData'])){
     $nama = $_POST['nama'];
     $nisn = $_POST['nisn'];

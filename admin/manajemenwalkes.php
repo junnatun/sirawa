@@ -34,12 +34,13 @@ if (isset($_POST['addData'])){
     $id_guru = $_POST['id_guru'];
     $kelas = $_POST['kelas'];
     $id_walikelas = "WK$kelas";
+    $password = md5('$kelas');
 
     $fetch_id_kelas = mysqli_query($conn, "SELECT id_kelas FROM tb_kelas WHERE kelas='$kelas'");
     $data_id_kelas = mysqli_fetch_array($fetch_id_kelas);
     $id_kelas = $data_id_kelas['id_kelas'];
     
-    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$kelas','wali kelas')");
+    $addUser = mysqli_query($conn, "INSERT INTO tb_user VALUES ('$id_user','$id_walikelas','$password','wali kelas')");
     if($addUser){
         $addWali = mysqli_query($conn, "INSERT INTO tb_walikelas VALUES ('$id_walikelas', '$id_user', '$id_kelas', '$id_guru')");
         if($addWali){
@@ -236,7 +237,7 @@ if (isset($_POST['editData'])) {
                         </div>
 
                         <div class="card-body">
-                            <table class="table table-striped" id="table1">
+                            <table class="table table-hover" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Wali</th>
@@ -363,7 +364,7 @@ if (isset($_POST['editData'])) {
                 </section>
             </div>
             <footer>
-                <div class="footer clearfix mb-0 text-muted position-absolute bottom-0">
+                <div class="footer clearfix mb-0 text-muted bottom-0">
                     <div class="float-start">
                         Made with ❤ by 
                         <a href="https://github.com/junnatun" target="_blank" class="footer-link fw-bolder">Junnatun</a>

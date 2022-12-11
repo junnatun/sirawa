@@ -50,7 +50,7 @@ if ($jumlahSiswa == 0 || $sudahInput == 0){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Guru</title>
+    <title>Dashboard</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
@@ -152,7 +152,7 @@ if ($jumlahSiswa == 0 || $sudahInput == 0){
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Siswa yang Diampu</h6>
+                                                <h6 class="text-muted font-semibold">Total Data yang Diambil</h6>
                                                 <h6 class="font-extrabold mb-0"><?= $jumlahSiswa ?></h6>
                                             </div>
                                         </div>

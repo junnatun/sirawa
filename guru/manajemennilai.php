@@ -44,7 +44,8 @@ $row = mysqli_fetch_assoc($sql);
 
 //GET SISWA YANG DIAMPU
 $id_kelas = $result['id_kelas'];
-$sql2= mysqli_query($conn, "SELECT COUNT(id_siswa) AS siswa FROM tb_nilai WHERE id_mapel='$id_mapel'");
+$getsmt = $_POST['smt'];
+$sql2= mysqli_query($conn, "SELECT COUNT(id_siswa) AS siswa FROM tb_nilai WHERE id_mapel='$id_mapel' AND semester= '$getsmt'");
 $row2 = mysqli_fetch_assoc($sql2);
 
 
@@ -62,11 +63,10 @@ if(isset($_POST['getDataSiswa'])) {
 
         if($data_terinput->num_rows == 0){
             $addToTable = mysqli_query($conn, "INSERT INTO tb_nilai VALUES ('$id_siswa', '$id_mapel', '$semester', '0', '0', '0', '0', '0', '0')");
-        }else {
-            header('refresh:0; url=manajemennilai.php');
-            echo "<script>alert('Semua data sudah diambil!')</script>";
         }
     }
+    header('refresh:0; url=manajemennilai.php');
+    echo "<script>alert('Semua data sudah diambil!')</script>";
 }
 
 //EDIT DATA
@@ -321,13 +321,13 @@ if(isset($_POST['delData'])){
                         </div>
 
                         <div class="card-body">
-                            <table class="table table-striped" id="table1">
+                            <table class="table table-hover" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Siswa</th>
                                         <th>Nama</th>
                                         <th>Kelas</th>
-                                        <th>smt</th>
+                                        <th>Semester</th>
                                         <th>PH1</th>
                                         <th>PH2</th>
                                         <th>PH3</th>

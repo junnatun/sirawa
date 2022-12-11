@@ -224,7 +224,7 @@ if (isset($_POST['editData'])) {
 
                         <div class="card-body">
                             <div class="table-responsive text-nowrap">
-                            <table class="table table-striped" id="table1">
+                            <table class="table table-hover" id="table1">
                                 <thead>
                                     <tr class="text-nowrap">
                                         <th>ID Guru</th>

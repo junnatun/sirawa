@@ -332,7 +332,7 @@ if (isset($_POST['editData'])) {
 
                         <div class="card-body">
                         <div class="table-responsive text-nowrap">
-                            <table class="table table-striped" id="table1">
+                            <table class="table table-hover" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Siswa</th>
@@ -433,7 +433,7 @@ if (isset($_POST['editData'])) {
                                     <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">
-                                            <input type="hidden" name="id_user" value="<?= $id_user; ?>">
+                                            <input type="text" name="id_user" value="<?= $id_user; ?>">
                                             <input type="hidden" name="id_siswa" value="<?= $id_siswa; ?>">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -450,19 +450,18 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Nama</label>
-                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" />
+                                                <input type="text" name="nama" class="form-control" value="<?= $nama ?>" required/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">NISN</label>
-                                                <input type="number" name="nisn" class="form-control" value="<?= $nisn ?>" />
+                                                <input type="number" name="nisn" class="form-control" value="<?= $nisn ?>" required />
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Kelas</label>
-                                                <!-- <input type="text" name="kelas" class="form-control" value="<?= $kelas ?>" /> -->
                                                     <select class="form-select" name="id_kelas" aria-label="Default select example">
                                                         <option selected value="<?= $id_kelas?>"><?=$kelas?></option>
                                                             <?php
@@ -492,19 +491,19 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Tempat Lahir</label>
-                                                <input type="text" name="tempat" class="form-control" value="<?= $tempat ?>" />
+                                                <input type="text" name="tempat" class="form-control" value="<?= $tempat ?>" required/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Tanggal Lahir</label>
-                                                <input type="date" name="tgl" class="form-control" value="<?= $tgl ?>" />
+                                                <input type="date" name="tgl" class="form-control" value="<?= $tgl ?>" required/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Agama</label>
-                                                <input type="text" name="agama" class="form-control" value="<?= $agama ?>" />
+                                                <input type="text" name="agama" class="form-control" value="<?= $agama ?>" required/>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -516,25 +515,25 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat</label>
-                                                <textarea class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>"><?= $alamat ?></textarea>
+                                                <textarea class="form-control" name="alamat" rows="3" placeholder="<?= $alamat ?>" required><?= $alamat ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Nama Ayah</label>
-                                                <input type="text" name="nama_ayah" class="form-control" value="<?= $nama_ayah ?>" >
+                                                <input type="text" name="nama_ayah" class="form-control" value="<?= $nama_ayah ?>" required >
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Pekerjaan Ayah</label>
-                                                <input type="text" name="profesi_ayah" class="form-control" value="<?= $profesi_ayah ?>" >
+                                                <input type="text" name="profesi_ayah" class="form-control" value="<?= $profesi_ayah ?>" required >
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat Ayah</label>
-                                                <textarea type="text" name="alamat_ayah" class="form-control" value="<?= $alamat_ayah ?>" ><?= $alamat_ayah ?></textarea>
+                                                <textarea type="text" name="alamat_ayah" class="form-control" value="<?= $alamat_ayah ?>" required ><?= $alamat_ayah ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -546,19 +545,19 @@ if (isset($_POST['editData'])) {
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Nama Ibu</label>
-                                                <input type="text" name="nama_ibu" class="form-control" value="<?= $nama_ibu ?>" >
+                                                <input type="text" name="nama_ibu" class="form-control" value="<?= $nama_ibu ?>" required >
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Pekerjaan Ibu</label>
-                                                <input type="text" name="profesi_ibu" class="form-control" value="<?= $profesi_ibu ?>" >
+                                                <input type="text" name="profesi_ibu" class="form-control" value="<?= $profesi_ibu ?>" required >
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col mb-3">
                                                 <label for="nameLarge" class="form-label">Alamat Ibu</label>
-                                                <textarea type="text" name="alamat_ibu" class="form-control" value="<?= $alamat_ibu ?>" ><?= $alamat_ibu ?></textarea>
+                                                <textarea type="text" name="alamat_ibu" class="form-control" value="<?= $alamat_ibu ?>" required ><?= $alamat_ibu ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">

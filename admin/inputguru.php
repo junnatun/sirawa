@@ -11,7 +11,7 @@ if(!isset($_SESSION['username'])){
     exit();
 }
 
-
+//ADD DATA
 if (isset($_POST['addData'])){
     $id_user = getIdUser($conn);
     $id_guru = getIdGuru($conn);

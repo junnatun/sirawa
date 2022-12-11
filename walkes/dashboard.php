@@ -85,7 +85,7 @@ if (isset($_POST['editData'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Wali Kelas</title>
+    <title>Dashboard</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
@@ -278,7 +278,7 @@ if (isset($_POST['editData'])) {
 
                         <div class="card-body">
                         <div class="table-responsive text-nowrap">
-                            <table class="table table-striped" id="table1">
+                            <table class="table table-hover" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Siswa</th>
@@ -368,7 +368,7 @@ if (isset($_POST['editData'])) {
                                         </td>
                                     </tr>
 
-                                    <!-- Modal Edit -->`
+                                    <!-- Modal Edit -->
                                     <div class="modal fade" id="editModal<?= $id_user; ?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <form method="POST">

@@ -234,7 +234,7 @@ $siswakelas = $result['siswa'];
                         </div>
 
                         <div class="card-body">
-                            <table class="table table-striped" id="table1">
+                            <table class="table table-hover" id="table1">
                                 <thead>
                                     <tr>
                                         <th>ID Siswa</th>

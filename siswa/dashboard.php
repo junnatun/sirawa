@@ -26,7 +26,7 @@ $row = mysqli_fetch_assoc($data);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Siswa</title>
+    <title>Dashboard</title>
 
     <link rel="stylesheet" href="../assets/css/main/app.css">
     <link rel="stylesheet" href="../assets/css/main/app-dark.css">
